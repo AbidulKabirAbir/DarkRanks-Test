@@ -813,6 +813,192 @@
         }
         .video-card:hover .card-delete { opacity: 1; }
         .video-card .card-delete:hover { background: #fa4b6e; }
+
+        /* YouTube search results specific styles */
+        .yt-search-results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding: 10px 0;
+            width: 100%;
+        }
+        .yt-result-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+        }
+        .yt-result-card:hover {
+            transform: translateY(-4px);
+            border-color: #00f2fe;
+            background: rgba(0,242,254,0.1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .yt-result-thumb {
+            position: relative;
+            padding-bottom: 56.25%;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+        .yt-result-thumb img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .yt-result-card:hover .yt-result-thumb img {
+            transform: scale(1.03);
+        }
+        .yt-result-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.85);
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .yt-result-info {
+            padding: 10px 12px;
+        }
+        .yt-result-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #eef2ff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            margin-bottom: 2px;
+        }
+        .yt-result-channel {
+            font-size: 11px;
+            color: #9aa8b9;
+        }
+        .yt-result-meta {
+            font-size: 10px;
+            color: #6a7b8e;
+            display: flex;
+            gap: 10px;
+            margin-top: 2px;
+        }
+        .yt-result-fav {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 5;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.7);
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .yt-result-fav:hover { transform: scale(1.15); }
+        .yt-result-fav.active { color: #fa4b6e; background: rgba(0,0,0,0.85); }
+        .yt-load-more {
+            display: flex;
+            justify-content: center;
+            padding: 16px 0 10px;
+        }
+        .yt-load-more button {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid #2a2a3a;
+            color: #eef2ff;
+            padding: 8px 28px;
+            border-radius: 40px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        .yt-load-more button:hover {
+            background: #00f2fe;
+            color: #000;
+            border-color: #00f2fe;
+        }
+        .yt-load-more button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        @media (max-width: 860px) {
+            .yt-search-results {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .yt-search-results {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .yt-result-title {
+                font-size: 11px;
+            }
+            .yt-result-info {
+                padding: 6px 8px;
+            }
+        }
+
+        /* Floating trailer overlay */
+        .floating-trailer {
+            position: fixed;
+            z-index: 1000;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            border: 2px solid #00f2fe;
+            width: 320px;
+            height: 180px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: none;
+        }
+        .floating-trailer.active {
+            opacity: 1;
+            pointer-events: none;
+            display: block;
+        }
+        .floating-trailer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .floating-trailer .trailer-label {
+            position: absolute;
+            bottom: 6px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            pointer-events: none;
+        }
+        @media (max-width: 700px) {
+            .floating-trailer {
+                width: 200px;
+                height: 113px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -922,9 +1108,21 @@
     <div class="toast" id="toast"></div>
     <div class="status-banner" id="statusBanner">🎬 Ready</div>
     <div id="trailerModal" class="trailer-modal"><div class="trailer-content"><iframe id="trailerIframe" allow="autoplay; encrypted-media"></iframe><button class="close-trailer" id="closeTrailerBtn"><i class="fas fa-times"></i></button></div></div>
+    
+    <!-- Floating Trailer -->
+    <div class="floating-trailer" id="floatingTrailer">
+        <iframe id="floatingTrailerIframe" allow="autoplay; encrypted-media"></iframe>
+        <div class="trailer-label">▶ Trailer</div>
+    </div>
 
     <script>
     (function(){
+        // ---------- YOUTUBE API CONFIG ----------
+        const YT_API_KEY = 'AIzaSyD_ggb1ACmlXwBiG7WvdIzqeF1pI8TXLaw';
+        const YT_SEARCH_URL = 'https://www.googleapis.com/youtube/v3/search';
+        const YT_VIDEO_URL = 'https://www.googleapis.com/youtube/v3/videos';
+        const MAX_RESULTS = 20;
+
         // ---------- LOCAL TV CHANNELS ----------
         const LOCAL_CHANNELS = [
             { name:"Somoy TV", logo:"https://tstatic.akash-go.com/cms-ui/images/custom-content/1735560559088.png", url:"https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8", category:"News", country:"Bangladesh" },
@@ -1013,89 +1211,89 @@
             }
         }
 
-        // ---------- MOVIES (expanded to ~15 per genre) ----------
+        // ---------- MOVIES ----------
         function generateMovies() {
             const baseMovies = [
                 // Action (15)
-                { name:"The Dark Knight", imdbId:"tt0468569", year:"2008", genre:"Action", rating:"9.0", description:"Batman faces the Joker.", logo:"https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi308529945" },
-                { name:"Inception", imdbId:"tt1375666", year:"2010", genre:"Action", rating:"8.8", description:"A thief who steals corporate secrets.", logo:"https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi123456789" },
-                { name:"Mad Max: Fury Road", imdbId:"tt1392190", year:"2015", genre:"Action", rating:"8.1", description:"In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler.", logo:"https://m.media-amazon.com/images/M/MV5BMTUyMjU1OTUwNV5BMl5BanBnXkFtZTgwMDg1MjQ2NjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi111111" },
-                { name:"John Wick", imdbId:"tt2911666", year:"2014", genre:"Action", rating:"7.4", description:"An ex-hitman comes out of retirement to track down the gangsters who killed his dog.", logo:"https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODcwMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi222222" },
-                { name:"Gladiator", imdbId:"tt0172495", year:"2000", genre:"Action", rating:"8.5", description:"A former Roman general seeks revenge against the corrupt emperor.", logo:"https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODEtN2U3NzIxMGVkZTA1L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi333333" },
-                { name:"Die Hard", imdbId:"tt0095016", year:"1988", genre:"Action", rating:"8.2", description:"A New York City police officer tries to save his wife and several others.", logo:"https://m.media-amazon.com/images/M/MV5BZjRlNDUxZjAtZTQyZC00ZDJhLTg2NzItM2U5OTM2NjQ3YzU1XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi444444" },
-                { name:"The Matrix", imdbId:"tt0133093", year:"1999", genre:"Action", rating:"8.7", description:"A computer hacker learns about the true nature of reality.", logo:"https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTMzLWI4ZWQtMjExNjE5MTY1NzQxXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi555555" },
-                { name:"The Avengers", imdbId:"tt0848228", year:"2012", genre:"Action", rating:"8.0", description:"Earth's mightiest heroes must unite to defeat an alien invasion.", logo:"https://m.media-amazon.com/images/M/MV5BMTk2NTI1MTU4N15BMl5BanBnXkFtZTcwODg3OTYxNw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi666666" },
-                { name:"Mission: Impossible - Fallout", imdbId:"tt4912910", year:"2018", genre:"Action", rating:"7.8", description:"Ethan Hunt and his team attempt to stop a rogue terrorist.", logo:"https://m.media-amazon.com/images/M/MV5BNjQwNTE3NjQ2NV5BMl5BanBnXkFtZTgwMDk5MjQ4NjM@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi777777" },
-                { name:"The Raid", imdbId:"tt1899353", year:"2011", genre:"Action", rating:"7.6", description:"A SWAT team becomes trapped in a tenement run by a ruthless mobster.", logo:"https://m.media-amazon.com/images/M/MV5BMTk5NjM4MjUyNV5BMl5BanBnXkFtZTcwNzY5NDkxNw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi888888" },
-                { name:"Terminator 2", imdbId:"tt0103064", year:"1991", genre:"Action", rating:"8.6", description:"A cyborg is sent back in time to protect a young boy from a more advanced cyborg.", logo:"https://m.media-amazon.com/images/M/MV5BMGU2NzRmZjUtOGUxYS00ZjdjLWEyZWUtY2VjNjE4OTQzMDk5XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi999999" },
-                { name:"The Bourne Identity", imdbId:"tt0258463", year:"2002", genre:"Action", rating:"7.9", description:"A man is found floating in the Mediterranean Sea with no memory.", logo:"https://m.media-amazon.com/images/M/MV5BZGNlYzU3NzQtZDY5NC00MDE1LWE4ZTEtYjNjZTg0ZmU1YzI1XkEyXkFqcGdeQXVyNDk3NzU2MTQ@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi101010" },
-                { name:"The Equalizer", imdbId:"tt0455944", year:"2014", genre:"Action", rating:"7.2", description:"A man who believes he has put his past behind him is drawn back into action.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ5OTY1NDA3Nl5BMl5BanBnXkFtZTgwNTQxNzg3MTE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi111111" },
-                { name:"The Man from U.N.C.L.E.", imdbId:"tt1638355", year:"2015", genre:"Action", rating:"7.3", description:"A CIA agent and a KGB agent must set aside their differences to stop a criminal organization.", logo:"https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODcwMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi121212" },
-                { name:"The Great Escape", imdbId:"tt0057115", year:"1963", genre:"Action", rating:"8.2", description:"Allied prisoners of war plan a mass escape from a German camp.", logo:"https://m.media-amazon.com/images/M/MV5BNzA4NmY2MDMtYWI4NC00NzU3LWEyNDctYzU5YjU2NzYyNTA3XkEyXkFqcGdeQXVyMTY5Nzc4MDY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi131313" },
+                { name:"The Dark Knight", imdbId:"tt0468569", year:"2008", genre:"Action", rating:"9.0", description:"Batman faces the Joker.", logo:"https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg" },
+                { name:"Inception", imdbId:"tt1375666", year:"2010", genre:"Action", rating:"8.8", description:"A thief who steals corporate secrets.", logo:"https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg" },
+                { name:"Mad Max: Fury Road", imdbId:"tt1392190", year:"2015", genre:"Action", rating:"8.1", description:"In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler.", logo:"https://m.media-amazon.com/images/M/MV5BMTUyMjU1OTUwNV5BMl5BanBnXkFtZTgwMDg1MjQ2NjE@._V1_.jpg" },
+                { name:"John Wick", imdbId:"tt2911666", year:"2014", genre:"Action", rating:"7.4", description:"An ex-hitman comes out of retirement to track down the gangsters who killed his dog.", logo:"https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODcwMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_.jpg" },
+                { name:"Gladiator", imdbId:"tt0172495", year:"2000", genre:"Action", rating:"8.5", description:"A former Roman general seeks revenge against the corrupt emperor.", logo:"https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODEtN2U3NzIxMGVkZTA1L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"Die Hard", imdbId:"tt0095016", year:"1988", genre:"Action", rating:"8.2", description:"A New York City police officer tries to save his wife and several others.", logo:"https://m.media-amazon.com/images/M/MV5BZjRlNDUxZjAtZTQyZC00ZDJhLTg2NzItM2U5OTM2NjQ3YzU1XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"The Matrix", imdbId:"tt0133093", year:"1999", genre:"Action", rating:"8.7", description:"A computer hacker learns about the true nature of reality.", logo:"https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTMzLWI4ZWQtMjExNjE5MTY1NzQxXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"The Avengers", imdbId:"tt0848228", year:"2012", genre:"Action", rating:"8.0", description:"Earth's mightiest heroes must unite to defeat an alien invasion.", logo:"https://m.media-amazon.com/images/M/MV5BMTk2NTI1MTU4N15BMl5BanBnXkFtZTcwODg3OTYxNw@@._V1_.jpg" },
+                { name:"Mission: Impossible - Fallout", imdbId:"tt4912910", year:"2018", genre:"Action", rating:"7.8", description:"Ethan Hunt and his team attempt to stop a rogue terrorist.", logo:"https://m.media-amazon.com/images/M/MV5BNjQwNTE3NjQ2NV5BMl5BanBnXkFtZTgwMDk5MjQ4NjM@._V1_.jpg" },
+                { name:"The Raid", imdbId:"tt1899353", year:"2011", genre:"Action", rating:"7.6", description:"A SWAT team becomes trapped in a tenement run by a ruthless mobster.", logo:"https://m.media-amazon.com/images/M/MV5BMTk5NjM4MjUyNV5BMl5BanBnXkFtZTcwNzY5NDkxNw@@._V1_.jpg" },
+                { name:"Terminator 2", imdbId:"tt0103064", year:"1991", genre:"Action", rating:"8.6", description:"A cyborg is sent back in time to protect a young boy from a more advanced cyborg.", logo:"https://m.media-amazon.com/images/M/MV5BMGU2NzRmZjUtOGUxYS00ZjdjLWEyZWUtY2VjNjE4OTQzMDk5XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"The Bourne Identity", imdbId:"tt0258463", year:"2002", genre:"Action", rating:"7.9", description:"A man is found floating in the Mediterranean Sea with no memory.", logo:"https://m.media-amazon.com/images/M/MV5BZGNlYzU3NzQtZDY5NC00MDE1LWE4ZTEtYjNjZTg0ZmU1YzI1XkEyXkFqcGdeQXVyNDk3NzU2MTQ@._V1_.jpg" },
+                { name:"The Equalizer", imdbId:"tt0455944", year:"2014", genre:"Action", rating:"7.2", description:"A man who believes he has put his past behind him is drawn back into action.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ5OTY1NDA3Nl5BMl5BanBnXkFtZTgwNTQxNzg3MTE@._V1_.jpg" },
+                { name:"The Man from U.N.C.L.E.", imdbId:"tt1638355", year:"2015", genre:"Action", rating:"7.3", description:"A CIA agent and a KGB agent must set aside their differences to stop a criminal organization.", logo:"https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODcwMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_.jpg" },
+                { name:"The Great Escape", imdbId:"tt0057115", year:"1963", genre:"Action", rating:"8.2", description:"Allied prisoners of war plan a mass escape from a German camp.", logo:"https://m.media-amazon.com/images/M/MV5BNzA4NmY2MDMtYWI4NC00NzU3LWEyNDctYzU5YjU2NzYyNTA3XkEyXkFqcGdeQXVyMTY5Nzc4MDY@._V1_.jpg" },
                 // Drama (15)
-                { name:"The Shawshank Redemption", imdbId:"tt0111161", year:"1994", genre:"Drama", rating:"9.3", description:"Two imprisoned men bond over decades.", logo:"https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2RlYy00NTE4LWFiMjktN2UwMjVmMjQ2ZWQ4XkEyXkFqcGc@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi1969408793" },
-                { name:"The Godfather", imdbId:"tt0068646", year:"1972", genre:"Drama", rating:"9.2", description:"The aging patriarch of an organized crime dynasty transfers control to his son.", logo:"https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi141414" },
-                { name:"The Godfather Part II", imdbId:"tt0071562", year:"1974", genre:"Drama", rating:"9.0", description:"The early life and career of Vito Corleone is explored.", logo:"https://m.media-amazon.com/images/M/MV5BMWMwMGQzZTItY2JlNC00OWZiLWIyMDctNDk2ZDQ2YjRjNTQ0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi151515" },
-                { name:"Schindler's List", imdbId:"tt0108052", year:"1993", genre:"Drama", rating:"8.9", description:"A German industrialist saves the lives of Jewish refugees during the Holocaust.", logo:"https://m.media-amazon.com/images/M/MV5BNDE4OTMxMTctNmRhYy00NWE2LTg3YzItYTk3M2UwOTU5Njg4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi161616" },
-                { name:"12 Angry Men", imdbId:"tt0050083", year:"1957", genre:"Drama", rating:"9.0", description:"A jury deliberates the fate of a young defendant.", logo:"https://m.media-amazon.com/images/M/MV5BMWU4N2FjNzYtNTVkNC00NzQ0LTg0MjAtYTJlMjFhNGUxZDFmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi171717" },
-                { name:"The Green Mile", imdbId:"tt0120689", year:"1999", genre:"Drama", rating:"8.6", description:"A corrections officer witnesses a miraculous healer on death row.", logo:"https://m.media-amazon.com/images/M/MV5BMTUxMzQyNjA5MF5BMl5BanBnXkFtZTYwOTU2NTY3._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi181818" },
-                { name:"The Pianist", imdbId:"tt0253474", year:"2002", genre:"Drama", rating:"8.5", description:"A Polish Jewish musician struggles to survive the Warsaw ghetto.", logo:"https://m.media-amazon.com/images/M/MV5BOWRiZDIxZjktMTA1NC00Y2U3LWE2MjYtNTk3NDc1Nzc0N2ZlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi191919" },
-                { name:"Forrest Gump", imdbId:"tt0109830", year:"1994", genre:"Drama", rating:"8.8", description:"The story of a man with a low IQ who witnesses and influences many historical events.", logo:"https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtM2ZmNmU4ZTRhNjI0XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi202020" },
-                { name:"The Pursuit of Happyness", imdbId:"tt0454921", year:"2006", genre:"Drama", rating:"8.0", description:"A struggling salesman takes custody of his son as he tries to build a better life.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ5NjQ0MDMyNV5BMl5BanBnXkFtZTcwMTk4NjQyMQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi212121" },
-                { name:"The Social Network", imdbId:"tt1285016", year:"2010", genre:"Drama", rating:"7.7", description:"The story of the founding of Facebook and the legal battles that followed.", logo:"https://m.media-amazon.com/images/M/MV5BMTM2OTk4NzE2N15BMl5BanBnXkFtZTcwMzI4NzYwMw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi222222" },
-                { name:"The King's Speech", imdbId:"tt1504320", year:"2010", genre:"Drama", rating:"8.0", description:"The British King George VI struggles with a speech impediment.", logo:"https://m.media-amazon.com/images/M/MV5BMzU5MjEwMTg2Nl5BMl5BanBnXkFtZTcwNzM3MTYxNA@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi232323" },
-                { name:"A Beautiful Mind", imdbId:"tt0268978", year:"2001", genre:"Drama", rating:"8.2", description:"A brilliant mathematician struggles with schizophrenia.", logo:"https://m.media-amazon.com/images/M/MV5BMzcwYWFkYzktZjAzNC00OGY1LWI4YTgtNzc5MzVjMDVmNjY0XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi242424" },
-                { name:"The Curious Case of Benjamin Button", imdbId:"tt0421715", year:"2008", genre:"Drama", rating:"7.8", description:"A man is born in his eighties and ages backwards.", logo:"https://m.media-amazon.com/images/M/MV5BMjEwNzI5NzIzN15BMl5BanBnXkFtZTcwMTQyODI3MQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi252525" },
-                { name:"The Reader", imdbId:"tt0976051", year:"2008", genre:"Drama", rating:"7.6", description:"A young man has an affair with an older woman who is later revealed to be a Nazi war criminal.", logo:"https://m.media-amazon.com/images/M/MV5BMTM3Nzg3MTQ5Nl5BMl5BanBnXkFtZTcwOTY5NzYyMQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi262626" },
-                { name:"The Descendants", imdbId:"tt1033575", year:"2011", genre:"Drama", rating:"7.3", description:"A land baron tries to rekindle his relationship with his daughters.", logo:"https://m.media-amazon.com/images/M/MV5BMTU0Njg5Mjg3OF5BMl5BanBnXkFtZTcwOTU3NjA4NQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi272727" },
+                { name:"The Shawshank Redemption", imdbId:"tt0111161", year:"1994", genre:"Drama", rating:"9.3", description:"Two imprisoned men bond over decades.", logo:"https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2RlYy00NTE4LWFiMjktN2UwMjVmMjQ2ZWQ4XkEyXkFqcGc@._V1_.jpg" },
+                { name:"The Godfather", imdbId:"tt0068646", year:"1972", genre:"Drama", rating:"9.2", description:"The aging patriarch of an organized crime dynasty transfers control to his son.", logo:"https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg" },
+                { name:"The Godfather Part II", imdbId:"tt0071562", year:"1974", genre:"Drama", rating:"9.0", description:"The early life and career of Vito Corleone is explored.", logo:"https://m.media-amazon.com/images/M/MV5BMWMwMGQzZTItY2JlNC00OWZiLWIyMDctNDk2ZDQ2YjRjNTQ0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg" },
+                { name:"Schindler's List", imdbId:"tt0108052", year:"1993", genre:"Drama", rating:"8.9", description:"A German industrialist saves the lives of Jewish refugees during the Holocaust.", logo:"https://m.media-amazon.com/images/M/MV5BNDE4OTMxMTctNmRhYy00NWE2LTg3YzItYTk3M2UwOTU5Njg4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"12 Angry Men", imdbId:"tt0050083", year:"1957", genre:"Drama", rating:"9.0", description:"A jury deliberates the fate of a young defendant.", logo:"https://m.media-amazon.com/images/M/MV5BMWU4N2FjNzYtNTVkNC00NzQ0LTg0MjAtYTJlMjFhNGUxZDFmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_.jpg" },
+                { name:"The Green Mile", imdbId:"tt0120689", year:"1999", genre:"Drama", rating:"8.6", description:"A corrections officer witnesses a miraculous healer on death row.", logo:"https://m.media-amazon.com/images/M/MV5BMTUxMzQyNjA5MF5BMl5BanBnXkFtZTYwOTU2NTY3._V1_.jpg" },
+                { name:"The Pianist", imdbId:"tt0253474", year:"2002", genre:"Drama", rating:"8.5", description:"A Polish Jewish musician struggles to survive the Warsaw ghetto.", logo:"https://m.media-amazon.com/images/M/MV5BOWRiZDIxZjktMTA1NC00Y2U3LWE2MjYtNTk3NDc1Nzc0N2ZlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"Forrest Gump", imdbId:"tt0109830", year:"1994", genre:"Drama", rating:"8.8", description:"The story of a man with a low IQ who witnesses and influences many historical events.", logo:"https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtM2ZmNmU4ZTRhNjI0XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"The Pursuit of Happyness", imdbId:"tt0454921", year:"2006", genre:"Drama", rating:"8.0", description:"A struggling salesman takes custody of his son as he tries to build a better life.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ5NjQ0MDMyNV5BMl5BanBnXkFtZTcwMTk4NjQyMQ@@._V1_.jpg" },
+                { name:"The Social Network", imdbId:"tt1285016", year:"2010", genre:"Drama", rating:"7.7", description:"The story of the founding of Facebook and the legal battles that followed.", logo:"https://m.media-amazon.com/images/M/MV5BMTM2OTk4NzE2N15BMl5BanBnXkFtZTcwMzI4NzYwMw@@._V1_.jpg" },
+                { name:"The King's Speech", imdbId:"tt1504320", year:"2010", genre:"Drama", rating:"8.0", description:"The British King George VI struggles with a speech impediment.", logo:"https://m.media-amazon.com/images/M/MV5BMzU5MjEwMTg2Nl5BMl5BanBnXkFtZTcwNzM3MTYxNA@@._V1_.jpg" },
+                { name:"A Beautiful Mind", imdbId:"tt0268978", year:"2001", genre:"Drama", rating:"8.2", description:"A brilliant mathematician struggles with schizophrenia.", logo:"https://m.media-amazon.com/images/M/MV5BMzcwYWFkYzktZjAzNC00OGY1LWI4YTgtNzc5MzVjMDVmNjY0XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"The Curious Case of Benjamin Button", imdbId:"tt0421715", year:"2008", genre:"Drama", rating:"7.8", description:"A man is born in his eighties and ages backwards.", logo:"https://m.media-amazon.com/images/M/MV5BMjEwNzI5NzIzN15BMl5BanBnXkFtZTcwMTQyODI3MQ@@._V1_.jpg" },
+                { name:"The Reader", imdbId:"tt0976051", year:"2008", genre:"Drama", rating:"7.6", description:"A young man has an affair with an older woman who is later revealed to be a Nazi war criminal.", logo:"https://m.media-amazon.com/images/M/MV5BMTM3Nzg3MTQ5Nl5BMl5BanBnXkFtZTcwOTY5NzYyMQ@@._V1_.jpg" },
+                { name:"The Descendants", imdbId:"tt1033575", year:"2011", genre:"Drama", rating:"7.3", description:"A land baron tries to rekindle his relationship with his daughters.", logo:"https://m.media-amazon.com/images/M/MV5BMTU0Njg5Mjg3OF5BMl5BanBnXkFtZTcwOTU3NjA4NQ@@._V1_.jpg" },
                 // Sci-Fi (15)
-                { name:"Interstellar", imdbId:"tt0816692", year:"2014", genre:"Sci-Fi", rating:"8.7", description:"A team of explorers travel through a wormhole.", logo:"https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGc@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi987654321" },
-                { name:"The Matrix", imdbId:"tt0133093", year:"1999", genre:"Sci-Fi", rating:"8.7", description:"A computer hacker learns about the true nature of reality.", logo:"https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTMzLWI4ZWQtMjExNjE5MTY1NzQxXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi555555" },
-                { name:"Blade Runner 2049", imdbId:"tt1856101", year:"2017", genre:"Sci-Fi", rating:"8.0", description:"A new blade runner uncovers a secret that could plunge society into chaos.", logo:"https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi282828" },
-                { name:"The Martian", imdbId:"tt3659388", year:"2015", genre:"Sci-Fi", rating:"8.0", description:"An astronaut is left behind on Mars and must survive.", logo:"https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi292929" },
-                { name:"Gravity", imdbId:"tt1454468", year:"2013", genre:"Sci-Fi", rating:"7.7", description:"A medical engineer and an astronaut work together to survive in space.", logo:"https://m.media-amazon.com/images/M/MV5BNjE5MzYwMzYxMF5BMl5BanBnXkFtZTcwOTk4MTk0OQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi303030" },
-                { name:"Arrival", imdbId:"tt2543164", year:"2016", genre:"Sci-Fi", rating:"7.9", description:"A linguist works with the military to communicate with alien visitors.", logo:"https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi313131" },
-                { name:"Ex Machina", imdbId:"tt0470752", year:"2014", genre:"Sci-Fi", rating:"7.7", description:"A programmer is invited to administer a Turing test to an intelligent AI.", logo:"https://m.media-amazon.com/images/M/MV5BMTUxNjIyNDk5NV5BMl5BanBnXkFtZTgwOTMyOTQyMjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi323232" },
-                { name:"The Terminator", imdbId:"tt0088247", year:"1984", genre:"Sci-Fi", rating:"8.1", description:"A cyborg assassin is sent back in time to kill the mother of a future resistance leader.", logo:"https://m.media-amazon.com/images/M/MV5BYTk5NjUzZmUtZjU3Ny00YjE2LWI2M2YtNDI5ZGIwNjA5NzUyXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi343434" },
-                { name:"E.T. the Extra-Terrestrial", imdbId:"tt0083866", year:"1982", genre:"Sci-Fi", rating:"7.9", description:"A young boy befriends an alien who is stranded on Earth.", logo:"https://m.media-amazon.com/images/M/MV5BZjQyM2ZiYzgtOTc3NC00M2Q2LWE4ZTItM2U1MDE0MTk0N2UwXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi353535" },
-                { name:"Back to the Future", imdbId:"tt0088763", year:"1985", genre:"Sci-Fi", rating:"8.5", description:"A teenager is accidentally sent back in time in a DeLorean.", logo:"https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi363636" },
-                { name:"The Fifth Element", imdbId:"tt0119116", year:"1997", genre:"Sci-Fi", rating:"7.6", description:"A cab driver becomes the protector of a woman who holds the key to saving the world.", logo:"https://m.media-amazon.com/images/M/MV5BZjU0Mzk1NjYtNTMyNS00MTQ3LWE3MDItNjYwYzE4N2UwMDFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi373737" },
-                { name:"Alien", imdbId:"tt0078748", year:"1979", genre:"Sci-Fi", rating:"8.5", description:"A commercial crew encounters a deadly alien life form.", logo:"https://m.media-amazon.com/images/M/MV5BOGQzZTBjMjQtOTVmMS00NGE5LWEyYmQtOGU1ZjUyODI2MmI2XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi383838" },
-                { name:"Predator", imdbId:"tt0093773", year:"1987", genre:"Sci-Fi", rating:"7.8", description:"A team of commandos is hunted by a technologically advanced alien.", logo:"https://m.media-amazon.com/images/M/MV5BMTY1NDE0NTY3NV5BMl5BanBnXkFtZTcwMTE4NTg2Mw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi393939" },
-                { name:"Edge of Tomorrow", imdbId:"tt1631867", year:"2014", genre:"Sci-Fi", rating:"7.9", description:"A soldier is stuck in a time loop, reliving the same day of a battle against aliens.", logo:"https://m.media-amazon.com/images/M/MV5BMTc5OTk4MTM3M15BMl5BanBnXkFtZTgwODcxNjg3MDE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi404040" },
-                { name:"Annihilation", imdbId:"tt2798920", year:"2018", genre:"Sci-Fi", rating:"6.9", description:"A biologist enters a mysterious area where the laws of nature are broken.", logo:"https://m.media-amazon.com/images/M/MV5BMTk2Mjc2NzY5Nl5BMl5BanBnXkFtZTgwMTA2OTA1NDM@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi414141" },
+                { name:"Interstellar", imdbId:"tt0816692", year:"2014", genre:"Sci-Fi", rating:"8.7", description:"A team of explorers travel through a wormhole.", logo:"https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGc@._V1_.jpg" },
+                { name:"The Matrix", imdbId:"tt0133093", year:"1999", genre:"Sci-Fi", rating:"8.7", description:"A computer hacker learns about the true nature of reality.", logo:"https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTMzLWI4ZWQtMjExNjE5MTY1NzQxXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"Blade Runner 2049", imdbId:"tt1856101", year:"2017", genre:"Sci-Fi", rating:"8.0", description:"A new blade runner uncovers a secret that could plunge society into chaos.", logo:"https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_.jpg" },
+                { name:"The Martian", imdbId:"tt3659388", year:"2015", genre:"Sci-Fi", rating:"8.0", description:"An astronaut is left behind on Mars and must survive.", logo:"https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_.jpg" },
+                { name:"Gravity", imdbId:"tt1454468", year:"2013", genre:"Sci-Fi", rating:"7.7", description:"A medical engineer and an astronaut work together to survive in space.", logo:"https://m.media-amazon.com/images/M/MV5BNjE5MzYwMzYxMF5BMl5BanBnXkFtZTcwOTk4MTk0OQ@@._V1_.jpg" },
+                { name:"Arrival", imdbId:"tt2543164", year:"2016", genre:"Sci-Fi", rating:"7.9", description:"A linguist works with the military to communicate with alien visitors.", logo:"https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_.jpg" },
+                { name:"Ex Machina", imdbId:"tt0470752", year:"2014", genre:"Sci-Fi", rating:"7.7", description:"A programmer is invited to administer a Turing test to an intelligent AI.", logo:"https://m.media-amazon.com/images/M/MV5BMTUxNjIyNDk5NV5BMl5BanBnXkFtZTgwOTMyOTQyMjE@._V1_.jpg" },
+                { name:"The Terminator", imdbId:"tt0088247", year:"1984", genre:"Sci-Fi", rating:"8.1", description:"A cyborg assassin is sent back in time to kill the mother of a future resistance leader.", logo:"https://m.media-amazon.com/images/M/MV5BYTk5NjUzZmUtZjU3Ny00YjE2LWI2M2YtNDI5ZGIwNjA5NzUyXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"E.T. the Extra-Terrestrial", imdbId:"tt0083866", year:"1982", genre:"Sci-Fi", rating:"7.9", description:"A young boy befriends an alien who is stranded on Earth.", logo:"https://m.media-amazon.com/images/M/MV5BZjQyM2ZiYzgtOTc3NC00M2Q2LWE4ZTItM2U1MDE0MTk0N2UwXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"Back to the Future", imdbId:"tt0088763", year:"1985", genre:"Sci-Fi", rating:"8.5", description:"A teenager is accidentally sent back in time in a DeLorean.", logo:"https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"The Fifth Element", imdbId:"tt0119116", year:"1997", genre:"Sci-Fi", rating:"7.6", description:"A cab driver becomes the protector of a woman who holds the key to saving the world.", logo:"https://m.media-amazon.com/images/M/MV5BZjU0Mzk1NjYtNTMyNS00MTQ3LWE3MDItNjYwYzE4N2UwMDFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"Alien", imdbId:"tt0078748", year:"1979", genre:"Sci-Fi", rating:"8.5", description:"A commercial crew encounters a deadly alien life form.", logo:"https://m.media-amazon.com/images/M/MV5BOGQzZTBjMjQtOTVmMS00NGE5LWEyYmQtOGU1ZjUyODI2MmI2XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"Predator", imdbId:"tt0093773", year:"1987", genre:"Sci-Fi", rating:"7.8", description:"A team of commandos is hunted by a technologically advanced alien.", logo:"https://m.media-amazon.com/images/M/MV5BMTY1NDE0NTY3NV5BMl5BanBnXkFtZTcwMTE4NTg2Mw@@._V1_.jpg" },
+                { name:"Edge of Tomorrow", imdbId:"tt1631867", year:"2014", genre:"Sci-Fi", rating:"7.9", description:"A soldier is stuck in a time loop, reliving the same day of a battle against aliens.", logo:"https://m.media-amazon.com/images/M/MV5BMTc5OTk4MTM3M15BMl5BanBnXkFtZTgwODcxNjg3MDE@._V1_.jpg" },
+                { name:"Annihilation", imdbId:"tt2798920", year:"2018", genre:"Sci-Fi", rating:"6.9", description:"A biologist enters a mysterious area where the laws of nature are broken.", logo:"https://m.media-amazon.com/images/M/MV5BMTk2Mjc2NzY5Nl5BMl5BanBnXkFtZTgwMTA2OTA1NDM@._V1_.jpg" },
                 // Thriller (15)
-                { name:"Parasite", imdbId:"tt6751668", year:"2019", genre:"Thriller", rating:"8.6", description:"Greed and class discrimination threaten the wealthy Park family.", logo:"https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGc@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi112233445" },
-                { name:"The Silence of the Lambs", imdbId:"tt0102926", year:"1991", genre:"Thriller", rating:"8.6", description:"A young FBI cadet must get inside the mind of a cannibalistic serial killer.", logo:"https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWI1MjAtYzM1MjA3ODU5NDg2XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi424242" },
-                { name:"Se7en", imdbId:"tt0114369", year:"1995", genre:"Thriller", rating:"8.6", description:"Two detectives hunt a serial killer who uses the seven deadly sins as his motives.", logo:"https://m.media-amazon.com/images/M/MV5BOTUwODM5MTctZjczMi00OTk4LTg3NWUtNmVhMTAzNTNjYjcyXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi434343" },
-                { name:"The Prestige", imdbId:"tt0482571", year:"2006", genre:"Thriller", rating:"8.5", description:"Two rival magicians engage in a bitter battle of one-upmanship.", logo:"https://m.media-amazon.com/images/M/MV5BMjA4NDI0MTIxNF5BMl5BanBnXkFtZTYwNTM0MzY2._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi444444" },
-                { name:"Shutter Island", imdbId:"tt1130884", year:"2010", genre:"Thriller", rating:"8.2", description:"A U.S. Marshal investigates the disappearance of a patient from a mental hospital.", logo:"https://m.media-amazon.com/images/M/MV5BMTMxMTIyNzMxMV5BMl5BanBnXkFtZTcwOTc4OTI3Mg@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi454545" },
-                { name:"The Departed", imdbId:"tt0407887", year:"2006", genre:"Thriller", rating:"8.5", description:"An undercover cop and a mole in the police force try to identify each other.", logo:"https://m.media-amazon.com/images/M/MV5BMTI1MTY2OTIxNV5BMl5BanBnXkFtZTcwNjI4NDg0Mw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi464646" },
-                { name:"Memento", imdbId:"tt0209144", year:"2000", genre:"Thriller", rating:"8.4", description:"A man with short-term memory loss uses notes and tattoos to hunt for his wife's killer.", logo:"https://m.media-amazon.com/images/M/MV5BZTcyNjk1MjgtOWI3Mi00YzQwLWI2MTgtYjVjZDQ2YzU0ZmIwXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi474747" },
-                { name:"The Girl with the Dragon Tattoo", imdbId:"tt1568346", year:"2011", genre:"Thriller", rating:"7.8", description:"A journalist and a hacker investigate a wealthy family's dark secrets.", logo:"https://m.media-amazon.com/images/M/MV5BMTU2MjA1ODcwMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi484848" },
-                { name:"Gone Girl", imdbId:"tt2267998", year:"2014", genre:"Thriller", rating:"8.1", description:"A man's wife goes missing, and he becomes the prime suspect in her disappearance.", logo:"https://m.media-amazon.com/images/M/MV5BMTk0MDQ3MzQ5OV5BMl5BanBnXkFtZTgwNzU1NzE3MjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi494949" },
-                { name:"The Revenant", imdbId:"tt1663202", year:"2015", genre:"Thriller", rating:"8.0", description:"A frontiersman seeks revenge after being left for dead by his companions.", logo:"https://m.media-amazon.com/images/M/MV5BMjU4NDExNDM1NF5BMl5BanBnXkFtZTgwMDIyMTgxNzE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi505050" },
-                { name:"No Country for Old Men", imdbId:"tt0477348", year:"2007", genre:"Thriller", rating:"8.2", description:"A hunter finds a suitcase full of money and is pursued by a relentless hitman.", logo:"https://m.media-amazon.com/images/M/MV5BMjA5Njk3MjM4OV5BMl5BanBnXkFtZTcwMTc5MTE1MQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi515151" },
-                { name:"The Town", imdbId:"tt0840361", year:"2010", genre:"Thriller", rating:"7.5", description:"A bank robber's life becomes complicated when he falls for a woman he took hostage.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ2NTMyNzI3NF5BMl5BanBnXkFtZTcwNzU0MTE3Mg@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi525252" },
-                { name:"The Accountant", imdbId:"tt2140479", year:"2016", genre:"Thriller", rating:"7.3", description:"A math savant works as a forensic accountant for dangerous criminal organizations.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ4OTUzMTg0NV5BMl5BanBnXkFtZTgwMDA1NzY5NjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi535353" },
-                { name:"Sicario", imdbId:"tt3397884", year:"2015", genre:"Thriller", rating:"7.7", description:"An FBI agent joins a covert task force to take down a drug cartel.", logo:"https://m.media-amazon.com/images/M/MV5BMjA5NjM3NTk1OF5BMl5BanBnXkFtZTgwOTU5ODg3NjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi545454" },
-                { name:"The Wolf of Wall Street", imdbId:"tt0993846", year:"2013", genre:"Thriller", rating:"8.2", description:"The story of a stockbroker's rise and fall in the world of corruption.", logo:"https://m.media-amazon.com/images/M/MV5BMjIxMjgxNTk0MF5BMl5BanBnXkFtZTgwNjIyOTg2MDE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi555555" },
+                { name:"Parasite", imdbId:"tt6751668", year:"2019", genre:"Thriller", rating:"8.6", description:"Greed and class discrimination threaten the wealthy Park family.", logo:"https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGc@._V1_.jpg" },
+                { name:"The Silence of the Lambs", imdbId:"tt0102926", year:"1991", genre:"Thriller", rating:"8.6", description:"A young FBI cadet must get inside the mind of a cannibalistic serial killer.", logo:"https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWI1MjAtYzM1MjA3ODU5NDg2XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"Se7en", imdbId:"tt0114369", year:"1995", genre:"Thriller", rating:"8.6", description:"Two detectives hunt a serial killer who uses the seven deadly sins as his motives.", logo:"https://m.media-amazon.com/images/M/MV5BOTUwODM5MTctZjczMi00OTk4LTg3NWUtNmVhMTAzNTNjYjcyXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"The Prestige", imdbId:"tt0482571", year:"2006", genre:"Thriller", rating:"8.5", description:"Two rival magicians engage in a bitter battle of one-upmanship.", logo:"https://m.media-amazon.com/images/M/MV5BMjA4NDI0MTIxNF5BMl5BanBnXkFtZTYwNTM0MzY2._V1_.jpg" },
+                { name:"Shutter Island", imdbId:"tt1130884", year:"2010", genre:"Thriller", rating:"8.2", description:"A U.S. Marshal investigates the disappearance of a patient from a mental hospital.", logo:"https://m.media-amazon.com/images/M/MV5BMTMxMTIyNzMxMV5BMl5BanBnXkFtZTcwOTc4OTI3Mg@@._V1_.jpg" },
+                { name:"The Departed", imdbId:"tt0407887", year:"2006", genre:"Thriller", rating:"8.5", description:"An undercover cop and a mole in the police force try to identify each other.", logo:"https://m.media-amazon.com/images/M/MV5BMTI1MTY2OTIxNV5BMl5BanBnXkFtZTcwNjI4NDg0Mw@@._V1_.jpg" },
+                { name:"Memento", imdbId:"tt0209144", year:"2000", genre:"Thriller", rating:"8.4", description:"A man with short-term memory loss uses notes and tattoos to hunt for his wife's killer.", logo:"https://m.media-amazon.com/images/M/MV5BZTcyNjk1MjgtOWI3Mi00YzQwLWI2MTgtYjVjZDQ2YzU0ZmIwXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg" },
+                { name:"The Girl with the Dragon Tattoo", imdbId:"tt1568346", year:"2011", genre:"Thriller", rating:"7.8", description:"A journalist and a hacker investigate a wealthy family's dark secrets.", logo:"https://m.media-amazon.com/images/M/MV5BMTU2MjA1ODcwMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_.jpg" },
+                { name:"Gone Girl", imdbId:"tt2267998", year:"2014", genre:"Thriller", rating:"8.1", description:"A man's wife goes missing, and he becomes the prime suspect in her disappearance.", logo:"https://m.media-amazon.com/images/M/MV5BMTk0MDQ3MzQ5OV5BMl5BanBnXkFtZTgwNzU1NzE3MjE@._V1_.jpg" },
+                { name:"The Revenant", imdbId:"tt1663202", year:"2015", genre:"Thriller", rating:"8.0", description:"A frontiersman seeks revenge after being left for dead by his companions.", logo:"https://m.media-amazon.com/images/M/MV5BMjU4NDExNDM1NF5BMl5BanBnXkFtZTgwMDIyMTgxNzE@._V1_.jpg" },
+                { name:"No Country for Old Men", imdbId:"tt0477348", year:"2007", genre:"Thriller", rating:"8.2", description:"A hunter finds a suitcase full of money and is pursued by a relentless hitman.", logo:"https://m.media-amazon.com/images/M/MV5BMjA5Njk3MjM4OV5BMl5BanBnXkFtZTcwMTc5MTE1MQ@@._V1_.jpg" },
+                { name:"The Town", imdbId:"tt0840361", year:"2010", genre:"Thriller", rating:"7.5", description:"A bank robber's life becomes complicated when he falls for a woman he took hostage.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ2NTMyNzI3NF5BMl5BanBnXkFtZTcwNzU0MTE3Mg@@._V1_.jpg" },
+                { name:"The Accountant", imdbId:"tt2140479", year:"2016", genre:"Thriller", rating:"7.3", description:"A math savant works as a forensic accountant for dangerous criminal organizations.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ4OTUzMTg0NV5BMl5BanBnXkFtZTgwMDA1NzY5NjE@._V1_.jpg" },
+                { name:"Sicario", imdbId:"tt3397884", year:"2015", genre:"Thriller", rating:"7.7", description:"An FBI agent joins a covert task force to take down a drug cartel.", logo:"https://m.media-amazon.com/images/M/MV5BMjA5NjM3NTk1OF5BMl5BanBnXkFtZTgwOTU5ODg3NjE@._V1_.jpg" },
+                { name:"The Wolf of Wall Street", imdbId:"tt0993846", year:"2013", genre:"Thriller", rating:"8.2", description:"The story of a stockbroker's rise and fall in the world of corruption.", logo:"https://m.media-amazon.com/images/M/MV5BMjIxMjgxNTk0MF5BMl5BanBnXkFtZTgwNjIyOTg2MDE@._V1_.jpg" },
                 // Comedy (15)
-                { name:"The Hangover", imdbId:"tt1119646", year:"2009", genre:"Comedy", rating:"7.7", description:"Three friends wake up after a wild bachelor party in Las Vegas with no memory of the night before.", logo:"https://m.media-amazon.com/images/M/MV5BZGIyNTQwNzItMDZlYS00NDUyLWI5Y2YtOTI2NzQ2NjA1MTUxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi565656" },
-                { name:"Superbad", imdbId:"tt0829482", year:"2007", genre:"Comedy", rating:"7.6", description:"Two high school friends try to score alcohol for a party in order to impress their crushes.", logo:"https://m.media-amazon.com/images/M/MV5BMTc0NjIyMjA4OF5BMl5BanBnXkFtZTcwMzIxNDE1MQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi575757" },
-                { name:"Step Brothers", imdbId:"tt0838283", year:"2008", genre:"Comedy", rating:"6.9", description:"Two immature adults become stepbrothers and cause havoc for their parents.", logo:"https://m.media-amazon.com/images/M/MV5BMTQyODkxMTYwNV5BMl5BanBnXkFtZTcwMDQzNzUzMQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi585858" },
-                { name:"The 40-Year-Old Virgin", imdbId:"tt0405422", year:"2005", genre:"Comedy", rating:"7.1", description:"A middle-aged man's friends try to help him lose his virginity.", logo:"https://m.media-amazon.com/images/M/MV5BZjQ4ZWM0ODUtZWRjNi00ZGY4LWE4YmUtNTRlMjQwY2I1NDUzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi595959" },
-                { name:"Bridesmaids", imdbId:"tt1478338", year:"2011", genre:"Comedy", rating:"6.8", description:"A woman's life falls apart while trying to be the maid of honor for her best friend.", logo:"https://m.media-amazon.com/images/M/MV5BMTUyMTUxMDU2OV5BMl5BanBnXkFtZTcwMjUyMjI0NA@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi606060" },
-                { name:"Anchorman", imdbId:"tt0357413", year:"2004", genre:"Comedy", rating:"7.2", description:"A San Diego news anchor is challenged by a female journalist for his position.", logo:"https://m.media-amazon.com/images/M/MV5BMTI2NjU3NzQyM15BMl5BanBnXkFtZTcwNjM1NTQyMQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi616161" },
-                { name:"Mean Girls", imdbId:"tt0377092", year:"2004", genre:"Comedy", rating:"7.1", description:"A homeschooled teenager navigates the social hierarchy of high school.", logo:"https://m.media-amazon.com/images/M/MV5BNDJlMDk5NjItMDI1NC00NTI1LWI4MmItZDg2OTJhYmU1ZTNjXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi626262" },
-                { name:"Zoolander", imdbId:"tt0196229", year:"2001", genre:"Comedy", rating:"6.6", description:"A male model is brainwashed to assassinate the Prime Minister of Malaysia.", logo:"https://m.media-amazon.com/images/M/MV5BMTI1NDQ2NzI1OV5BMl5BanBnXkFtZTcwMDYzOTQyMQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi636363" },
-                { name:"Dumb and Dumber", imdbId:"tt0109686", year:"1994", genre:"Comedy", rating:"7.3", description:"Two dimwitted friends go on a cross-country trip to return a briefcase.", logo:"https://m.media-amazon.com/images/M/MV5BMTQwMTE4MzE2Nl5BMl5BanBnXkFtZTcwNDE2NjU0Mw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi646464" },
-                { name:"Austin Powers", imdbId:"tt0118655", year:"1997", genre:"Comedy", rating:"7.0", description:"A 1960s spy is thawed out to battle his nemesis in the 1990s.", logo:"https://m.media-amazon.com/images/M/MV5BMTUxMjU5NTE3OV5BMl5BanBnXkFtZTcwNTY1NDYyMQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi656565" },
-                { name:"The Other Guys", imdbId:"tt1386588", year:"2010", genre:"Comedy", rating:"6.6", description:"Two mismatched cops take on a case that could make or break their careers.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ4MjI5MjE1OV5BMl5BanBnXkFtZTcwNTE4MjMzMw@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi666666" },
-                { name:"Knocked Up", imdbId:"tt0478311", year:"2007", genre:"Comedy", rating:"6.9", description:"A one-night stand leads to an unexpected pregnancy and a reluctant relationship.", logo:"https://m.media-amazon.com/images/M/MV5BMTc3OTQ3Nzk0NV5BMl5BanBnXkFtZTcwNDU4NjYxMg@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi676767" },
-                { name:"Tropic Thunder", imdbId:"tt0942385", year:"2008", genre:"Comedy", rating:"7.0", description:"A group of actors filming a war movie are dropped into the real jungle.", logo:"https://m.media-amazon.com/images/M/MV5BNDE5NjQzMDYyN15BMl5BanBnXkFtZTcwMjU5OTUzMQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi686868" },
-                { name:"This Is the End", imdbId:"tt1245492", year:"2013", genre:"Comedy", rating:"6.7", description:"Celebrities face the apocalypse in a house in Los Angeles.", logo:"https://m.media-amazon.com/images/M/MV5BMTQxODE3NjQ1Nl5BMl5BanBnXkFtZTcwNTA5ODI4OQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi696969" },
-                { name:"The Heat", imdbId:"tt2404463", year:"2013", genre:"Comedy", rating:"6.6", description:"An uptight FBI agent is partnered with a foul-mouthed Boston cop to take down a drug lord.", logo:"https://m.media-amazon.com/images/M/MV5BMTY4NDExNDM1NF5BMl5BanBnXkFtZTcwMTI4NDY2OQ@@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi707070" },
+                { name:"The Hangover", imdbId:"tt1119646", year:"2009", genre:"Comedy", rating:"7.7", description:"Three friends wake up after a wild bachelor party in Las Vegas with no memory of the night before.", logo:"https://m.media-amazon.com/images/M/MV5BZGIyNTQwNzItMDZlYS00NDUyLWI5Y2YtOTI2NzQ2NjA1MTUxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"Superbad", imdbId:"tt0829482", year:"2007", genre:"Comedy", rating:"7.6", description:"Two high school friends try to score alcohol for a party in order to impress their crushes.", logo:"https://m.media-amazon.com/images/M/MV5BMTc0NjIyMjA4OF5BMl5BanBnXkFtZTcwMzIxNDE1MQ@@._V1_.jpg" },
+                { name:"Step Brothers", imdbId:"tt0838283", year:"2008", genre:"Comedy", rating:"6.9", description:"Two immature adults become stepbrothers and cause havoc for their parents.", logo:"https://m.media-amazon.com/images/M/MV5BMTQyODkxMTYwNV5BMl5BanBnXkFtZTcwMDQzNzUzMQ@@._V1_.jpg" },
+                { name:"The 40-Year-Old Virgin", imdbId:"tt0405422", year:"2005", genre:"Comedy", rating:"7.1", description:"A middle-aged man's friends try to help him lose his virginity.", logo:"https://m.media-amazon.com/images/M/MV5BZjQ4ZWM0ODUtZWRjNi00ZGY4LWE4YmUtNTRlMjQwY2I1NDUzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"Bridesmaids", imdbId:"tt1478338", year:"2011", genre:"Comedy", rating:"6.8", description:"A woman's life falls apart while trying to be the maid of honor for her best friend.", logo:"https://m.media-amazon.com/images/M/MV5BMTUyMTUxMDU2OV5BMl5BanBnXkFtZTcwMjUyMjI0NA@@._V1_.jpg" },
+                { name:"Anchorman", imdbId:"tt0357413", year:"2004", genre:"Comedy", rating:"7.2", description:"A San Diego news anchor is challenged by a female journalist for his position.", logo:"https://m.media-amazon.com/images/M/MV5BMTI2NjU3NzQyM15BMl5BanBnXkFtZTcwNjM1NTQyMQ@@._V1_.jpg" },
+                { name:"Mean Girls", imdbId:"tt0377092", year:"2004", genre:"Comedy", rating:"7.1", description:"A homeschooled teenager navigates the social hierarchy of high school.", logo:"https://m.media-amazon.com/images/M/MV5BNDJlMDk5NjItMDI1NC00NTI1LWI4MmItZDg2OTJhYmU1ZTNjXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg" },
+                { name:"Zoolander", imdbId:"tt0196229", year:"2001", genre:"Comedy", rating:"6.6", description:"A male model is brainwashed to assassinate the Prime Minister of Malaysia.", logo:"https://m.media-amazon.com/images/M/MV5BMTI1NDQ2NzI1OV5BMl5BanBnXkFtZTcwMDYzOTQyMQ@@._V1_.jpg" },
+                { name:"Dumb and Dumber", imdbId:"tt0109686", year:"1994", genre:"Comedy", rating:"7.3", description:"Two dimwitted friends go on a cross-country trip to return a briefcase.", logo:"https://m.media-amazon.com/images/M/MV5BMTQwMTE4MzE2Nl5BMl5BanBnXkFtZTcwNDE2NjU0Mw@@._V1_.jpg" },
+                { name:"Austin Powers", imdbId:"tt0118655", year:"1997", genre:"Comedy", rating:"7.0", description:"A 1960s spy is thawed out to battle his nemesis in the 1990s.", logo:"https://m.media-amazon.com/images/M/MV5BMTUxMjU5NTE3OV5BMl5BanBnXkFtZTcwNTY1NDYyMQ@@._V1_.jpg" },
+                { name:"The Other Guys", imdbId:"tt1386588", year:"2010", genre:"Comedy", rating:"6.6", description:"Two mismatched cops take on a case that could make or break their careers.", logo:"https://m.media-amazon.com/images/M/MV5BMTQ4MjI5MjE1OV5BMl5BanBnXkFtZTcwNTE4MjMzMw@@._V1_.jpg" },
+                { name:"Knocked Up", imdbId:"tt0478311", year:"2007", genre:"Comedy", rating:"6.9", description:"A one-night stand leads to an unexpected pregnancy and a reluctant relationship.", logo:"https://m.media-amazon.com/images/M/MV5BMTc3OTQ3Nzk0NV5BMl5BanBnXkFtZTcwNDU4NjYxMg@@._V1_.jpg" },
+                { name:"Tropic Thunder", imdbId:"tt0942385", year:"2008", genre:"Comedy", rating:"7.0", description:"A group of actors filming a war movie are dropped into the real jungle.", logo:"https://m.media-amazon.com/images/M/MV5BNDE5NjQzMDYyN15BMl5BanBnXkFtZTcwMjU5OTUzMQ@@._V1_.jpg" },
+                { name:"This Is the End", imdbId:"tt1245492", year:"2013", genre:"Comedy", rating:"6.7", description:"Celebrities face the apocalypse in a house in Los Angeles.", logo:"https://m.media-amazon.com/images/M/MV5BMTQxODE3NjQ1Nl5BMl5BanBnXkFtZTcwNTA5ODI4OQ@@._V1_.jpg" },
+                { name:"The Heat", imdbId:"tt2404463", year:"2013", genre:"Comedy", rating:"6.6", description:"An uptight FBI agent is partnered with a foul-mouthed Boston cop to take down a drug lord.", logo:"https://m.media-amazon.com/images/M/MV5BMTY4NDExNDM1NF5BMl5BanBnXkFtZTcwMTI4NDY2OQ@@._V1_.jpg" },
             ];
             return baseMovies;
         }
@@ -1135,7 +1333,7 @@
             if(currentSource === 'movies') renderMovies();
         }
 
-        // ---------- MOVIE PERSONAL FAVORITES (bookmarks) ----------
+        // ---------- MOVIE PERSONAL FAVORITES ----------
         let movieFavorites = new Set();
         try {
             const fav = localStorage.getItem('movie_favorites');
@@ -1161,7 +1359,7 @@
             return movieFavorites.has(movie.imdbId);
         }
 
-        // ---------- CHANNEL FAVORITES (local & global) ----------
+        // ---------- CHANNEL FAVORITES ----------
         let channelFavorites = new Set();
         try {
             const fav = localStorage.getItem('channel_favorites');
@@ -1187,7 +1385,6 @@
             return channelFavorites.has(channel.url);
         }
 
-        // -------- MOVIE FAVORITES TOGGLE (filter by personal favorites) ----------
         let showFavMovies = false;
 
         const PROVIDERS = [
@@ -1235,8 +1432,7 @@
                                 genre: detail?.Genre?.split(',')[0] || "General",
                                 rating: detail?.imdbRating || "N/A",
                                 description: detail?.Plot || "No description",
-                                logo: item.Poster !== "N/A" ? item.Poster : `https://via.placeholder.com/300x450`,
-                                trailerUrl: `https://www.imdb.com/video/vi${Math.floor(Math.random()*1000000000)}`
+                                logo: item.Poster !== "N/A" ? item.Poster : `https://via.placeholder.com/300x450`
                             });
                         }
                     } else if (data.Title) {
@@ -1247,8 +1443,7 @@
                             genre: data.Genre?.split(',')[0] || "General",
                             rating: data.imdbRating || "N/A",
                             description: data.Plot || "No description",
-                            logo: data.Poster !== "N/A" ? data.Poster : `https://via.placeholder.com/300x450`,
-                            trailerUrl: `https://www.imdb.com/video/vi${Math.floor(Math.random()*1000000000)}`
+                            logo: data.Poster !== "N/A" ? data.Poster : `https://via.placeholder.com/300x450`
                         });
                     }
                     return movies;
@@ -1274,17 +1469,16 @@
                             genre: detail?.Genre?.split(',')[0] || "General",
                             rating: detail?.imdbRating || "N/A",
                             description: detail?.Plot || "No description",
-                            logo: item.Poster !== "N/A" ? item.Poster : `https://via.placeholder.com/300x450`,
-                            trailerUrl: `https://www.imdb.com/video/vi${Math.floor(Math.random()*1000000000)}`
+                            logo: item.Poster !== "N/A" ? item.Poster : `https://via.placeholder.com/300x450`
                         });
                     }
                     return movies;
                 }
             } catch(e) {}
             return [
-                { name:"Oppenheimer", imdbId:"tt15398776", year:"2023", genre:"Drama", rating:"8.6", description:"The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.", logo:"https://m.media-amazon.com/images/M/MV5BMjE5NDQwMjIwN15BMl5BanBnXkFtZTgwMDQ3MjMwMjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi111111" },
-                { name:"Barbie", imdbId:"tt1517268", year:"2023", genre:"Comedy", rating:"7.0", description:"Barbie suffers a crisis that leads her to question her world and her existence.", logo:"https://m.media-amazon.com/images/M/MV5BZjE5MDQwMjIwN15BMl5BanBnXkFtZTgwMDQ3MjMwMjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi222222" },
-                { name:"Spider-Man: Across the Spider-Verse", imdbId:"tt9362722", year:"2023", genre:"Animation", rating:"8.9", description:"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People.", logo:"https://m.media-amazon.com/images/M/MV5BMjE5NDQwMjIwN15BMl5BanBnXkFtZTgwMDQ3MjMwMjE@._V1_.jpg", trailerUrl:"https://www.imdb.com/video/vi333333" },
+                { name:"Oppenheimer", imdbId:"tt15398776", year:"2023", genre:"Drama", rating:"8.6", description:"The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.", logo:"https://m.media-amazon.com/images/M/MV5BMjE5NDQwMjIwN15BMl5BanBnXkFtZTgwMDQ3MjMwMjE@._V1_.jpg" },
+                { name:"Barbie", imdbId:"tt1517268", year:"2023", genre:"Comedy", rating:"7.0", description:"Barbie suffers a crisis that leads her to question her world and her existence.", logo:"https://m.media-amazon.com/images/M/MV5BZjE5MDQwMjIwN15BMl5BanBnXkFtZTgwMDQ3MjMwMjE@._V1_.jpg" },
+                { name:"Spider-Man: Across the Spider-Verse", imdbId:"tt9362722", year:"2023", genre:"Animation", rating:"8.9", description:"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People.", logo:"https://m.media-amazon.com/images/M/MV5BMjE5NDQwMjIwN15BMl5BanBnXkFtZTgwMDQ3MjMwMjE@._V1_.jpg" },
             ];
         }
 
@@ -1292,7 +1486,7 @@
         trendingPromise.then(data => { trendingMovies = data; if (currentSource === 'movies') refreshDisplay(); });
 
         // ===================================================================
-        // YOUTUBE & FACEBOOK VIDEO DATA (like Movies World)
+        // YOUTUBE & FACEBOOK VIDEO DATA
         // ===================================================================
         const YOUTUBE_VIDEOS = [
             { id: 'yt1', title: 'Movie Trailer: The Dark Knight', thumbnail: 'https://img.youtube.com/vi/EXeTwQWrcwY/mqdefault.jpg', videoId: 'EXeTwQWrcwY', category: 'Trailers' },
@@ -1307,7 +1501,6 @@
             { id: 'yt10', title: 'Travel: Best Places in Japan', thumbnail: 'https://img.youtube.com/vi/2A7U9dLGP7g/mqdefault.jpg', videoId: '2A7U9dLGP7g', category: 'Travel' },
         ];
 
-        // Facebook videos with real URLs (using the same working ones from reference)
         const FACEBOOK_VIDEOS = [
             { id: 'fb1', title: 'PlayStation - Official Trailer', thumbnail: 'https://via.placeholder.com/320x180/1a1a2e/fff?text=PlayStation', url: 'https://www.facebook.com/PlayStation/videos/10155554431506803/', category: 'Gaming' },
             { id: 'fb2', title: 'Red Table Talk - Highlights', thumbnail: 'https://via.placeholder.com/320x180/1a1a2e/fff?text=Red+Table+Talk', url: 'https://www.facebook.com/redtabletalk/videos/693700561979212/', category: 'Talk Show' },
@@ -1315,9 +1508,6 @@
             { id: 'fb4', title: 'DIY Home Decor Tips', thumbnail: 'https://via.placeholder.com/320x180/1a1a2e/fff?text=DIY+Home', url: 'https://www.facebook.com/watch/?v=945902837641592', category: 'DIY' },
             { id: 'fb5', title: 'Motivational Speech (Live)', thumbnail: 'https://via.placeholder.com/320x180/1a1a2e/fff?text=Motivation', url: 'https://www.facebook.com/watch/?v=531411456270113', category: 'Motivation' },
         ];
-
-        // Combine for total count
-        const ALL_VIDEOS = [...YOUTUBE_VIDEOS, ...FACEBOOK_VIDEOS];
 
         // Video favorites (for YT HUB)
         let videoFavorites = new Set();
@@ -1332,7 +1522,7 @@
             localStorage.setItem('video_favorites', JSON.stringify([...videoFavorites]));
         }
         function toggleVideoFav(video) {
-            const id = video.id;
+            const id = video.id || video.videoId;
             if(videoFavorites.has(id)) {
                 videoFavorites.delete(id);
             } else {
@@ -1342,15 +1532,21 @@
             if(currentSource === 'youtube') renderYoutubeGrid();
         }
         function isVideoFav(video) {
-            return videoFavorites.has(video.id);
+            const id = video.id || video.videoId;
+            return videoFavorites.has(id);
         }
 
         // Sub-source for YT HUB: 'youtube' or 'facebook'
         let currentSubSource = 'youtube';
-        // Category for YT HUB
         let currentVideoCategory = 'All';
-        // Show favorites only for videos?
         let showVideoFavoritesOnly = false;
+
+        // ---------- YOUTUBE SEARCH STATE ----------
+        let ytSearchResults = [];
+        let ytNextPageToken = null;
+        let ytIsLoading = false;
+        let ytCurrentQuery = '';
+        let searchDebounceTimeout = null;
 
         // ---------- CORE STATE ----------
         let currentSource = 'local';
@@ -1366,7 +1562,6 @@
         let currentMovieItem = null;
         let userHasInteracted = false;
         let channelInfoTimer = null;
-        let searchDebounceTimer = null;
         let lastDirection = 1;
         let showFavoritesOnly = false;
 
@@ -1425,6 +1620,10 @@
         const youtubeCategoryTabs = document.getElementById('youtubeCategoryTabs');
         const videoFavToggle = document.getElementById('videoFavToggle');
 
+        // Floating trailer elements
+        const floatingTrailer = document.getElementById('floatingTrailer');
+        const floatingTrailerIframe = document.getElementById('floatingTrailerIframe');
+
         video.volume = savedVolume;
         video.muted = savedMuted;
         updateVolumeUI();
@@ -1470,7 +1669,7 @@
             else if(currentSource === 'global') liveBadgeDiv.innerHTML = `<div class="live-dot"></div> <span>${globalChannels.length || '...'}</span> LIVE`;
             else if(currentSource === 'movies') liveBadgeDiv.innerHTML = `<i class="fas fa-film"></i> <span>${movieMaster.length}</span> MOVIES`;
             else if(currentSource === 'youtube') {
-                const totalVids = YOUTUBE_VIDEOS.length + FACEBOOK_VIDEOS.length;
+                const totalVids = YOUTUBE_VIDEOS.length + FACEBOOK_VIDEOS.length + ytSearchResults.length;
                 liveBadgeDiv.innerHTML = `<i class="fab fa-youtube"></i> <span>${totalVids}</span> VIDEOS`;
             }
             else liveBadgeDiv.innerHTML = `<i class="fab fa-youtube"></i> <span>YT</span> HUB`;
@@ -1482,7 +1681,6 @@
             movieIframe.src = ''; youtubeIframe.src = '';
             video.style.display = 'block'; movieIframe.style.display = 'none'; youtubeIframe.style.display = 'none';
             loadingOverlay.classList.remove('active'); errorOverlay.classList.remove('active');
-            // Reset wrapper aspect ratio for Facebook fix
             wrapper.style.aspectRatio = '16 / 9';
             wrapper.style.height = 'auto';
         }
@@ -1521,7 +1719,7 @@
             }
         }
 
-        // -------- IMPROVED YOUTUBE / FACEBOOK PLAYBACK (from reference) ----------
+        // -------- IMPROVED YOUTUBE / FACEBOOK PLAYBACK ----------
         function extractYoutubeId(url) {
             const regex = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i;
             const match = url.match(regex);
@@ -1548,41 +1746,35 @@
 
             let embedSrc = '';
             if (currentSubSource === 'youtube') {
-                // Use videoId field
                 const videoId = videoItem.videoId;
                 if (videoId) {
                     embedSrc = getYoutubeEmbedUrl(videoId);
                 } else {
-                    // fallback: try to extract from url if present
                     const url = videoItem.url || '';
                     const id = extractYoutubeId(url);
                     if (id) {
                         embedSrc = getYoutubeEmbedUrl(id);
                     } else {
-                        // fallback to a placeholder
                         embedSrc = 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=1&playsinline=1&rel=0';
                         showToast('YouTube video ID missing, using placeholder', true);
                     }
                 }
-                // Reset wrapper to default aspect ratio
                 wrapper.style.aspectRatio = '16 / 9';
                 wrapper.style.height = 'auto';
             } else if (currentSubSource === 'facebook') {
-                // Use the url field for Facebook
                 const fbUrl = videoItem.url;
                 if (fbUrl) {
                     embedSrc = buildFacebookEmbedUrl(fbUrl);
-                    // Remove the popup message, just show a subtle toast
                     showToast('Loading Facebook video...');
                 } else {
                     embedSrc = 'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D10155554431506803&show_text=0&autoplay=1&mute=1';
                     showToast('Facebook URL missing, using placeholder', true);
                 }
-                // Fix for vertical videos: remove fixed aspect ratio and let the iframe fill the container
                 wrapper.style.aspectRatio = 'unset';
                 wrapper.style.height = '100%';
+                youtubeIframe.style.width = '100%';
+                youtubeIframe.style.height = '100%';
             } else {
-                // fallback
                 embedSrc = 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=1&playsinline=1&rel=0';
                 wrapper.style.aspectRatio = '16 / 9';
                 wrapper.style.height = 'auto';
@@ -1590,26 +1782,24 @@
 
             youtubeIframe.src = embedSrc;
 
-            // ---------- FIX: set proper attributes for Facebook embeds ----------
             if (currentSubSource === 'facebook') {
                 youtubeIframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen');
                 youtubeIframe.setAttribute('allowfullscreen', 'true');
                 youtubeIframe.setAttribute('scrolling', 'no');
                 youtubeIframe.setAttribute('frameborder', '0');
                 youtubeIframe.setAttribute('loading', 'lazy');
-                // Ensure iframe fills container
                 youtubeIframe.style.width = '100%';
                 youtubeIframe.style.height = '100%';
+                youtubeIframe.style.objectFit = 'contain';
             } else {
                 youtubeIframe.setAttribute('allow', 'autoplay fullscreen');
-                // reset other attributes to avoid conflicts
                 youtubeIframe.removeAttribute('scrolling');
                 youtubeIframe.removeAttribute('frameborder');
                 youtubeIframe.removeAttribute('loading');
                 youtubeIframe.style.width = '100%';
                 youtubeIframe.style.height = '100%';
+                youtubeIframe.style.objectFit = '';
             }
-            // ---------- END FIX ----------
 
             channelInfo.innerHTML = `<i class="fab fa-youtube"></i> ${videoItem.title}`;
             if (channelInfoTimer) clearTimeout(channelInfoTimer);
@@ -1626,11 +1816,8 @@
                 return false;
             }
             const trimmed = url.trim();
-            
-            // Detect if it's a YouTube URL
             const ytId = extractYoutubeId(trimmed);
             if (ytId) {
-                // Add to YouTube list
                 const newVideo = {
                     id: 'yt_' + Date.now(),
                     title: 'YouTube Video',
@@ -1646,17 +1833,12 @@
                 showToast('✅ YouTube video added!');
                 return true;
             }
-            
-            // Check if it's a Facebook URL
             if (trimmed.includes('facebook.com') || trimmed.includes('fb.watch') || trimmed.includes('fb.com')) {
-                // Try to extract a clean Facebook video URL
-                let fbUrl = trimmed;
-                // If it's a short URL or watch URL, keep as-is
                 const newVideo = {
                     id: 'fb_' + Date.now(),
                     title: 'Facebook Video',
                     thumbnail: 'https://via.placeholder.com/320x180/1a1a2e/fff?text=Facebook+Video',
-                    url: fbUrl,
+                    url: trimmed,
                     category: 'Custom'
                 };
                 FACEBOOK_VIDEOS.push(newVideo);
@@ -1667,15 +1849,249 @@
                 showToast('✅ Facebook video added!');
                 return true;
             }
-            
             showToast('⚠️ Unsupported URL. Please use YouTube or Facebook video links.', true);
             return false;
         }
 
-        // -------- RENDER YT HUB GRID (like Movies World) ----------
+        // ============================================================
+        //  YOUTUBE SEARCH API FUNCTIONS (Super Intelligent)
+        // ============================================================
+        function formatDuration(seconds) {
+            if (!seconds) return '';
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            return `${m}:${String(m).padStart(2, '0')}`;
+        }
+
+        function getPublishDate(publishedAt) {
+            const date = new Date(publishedAt);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        function saveSearchHistory(query) {
+            if (!query.trim()) return;
+            let history = [];
+            try {
+                history = JSON.parse(localStorage.getItem('youtubeSearchHistory')) || [];
+            } catch(e) {}
+            history = history.filter(item => item !== query);
+            history.unshift(query);
+            if (history.length > 10) history.pop();
+            localStorage.setItem('youtubeSearchHistory', JSON.stringify(history));
+        }
+
+        async function fetchYoutubeDurations(videoIds) {
+            if (!videoIds) return {};
+            try {
+                const params = new URLSearchParams({
+                    part: 'contentDetails',
+                    id: videoIds,
+                    key: YT_API_KEY,
+                });
+                const res = await fetch(`${YT_VIDEO_URL}?${params}`);
+                if (!res.ok) return {};
+                const data = await res.json();
+                const map = {};
+                if (data.items) {
+                    data.items.forEach(item => {
+                        const iso = item.contentDetails.duration;
+                        const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+                        if (m) {
+                            const h = parseInt(m[1] || 0);
+                            const min = parseInt(m[2] || 0);
+                            const sec = parseInt(m[3] || 0);
+                            map[item.id] = h * 3600 + min * 60 + sec;
+                        }
+                    });
+                }
+                return map;
+            } catch {
+                return {};
+            }
+        }
+
+        async function searchYoutube(query, pageToken = null) {
+            if (ytIsLoading) return;
+            ytIsLoading = true;
+
+            if (!pageToken) {
+                channelsGrid.innerHTML = `<div class="search-loading"><i class="fas fa-spinner fa-pulse"></i><div>Searching YouTube for "${query}"...</div></div>`;
+            }
+
+            try {
+                const params = new URLSearchParams({
+                    part: 'snippet',
+                    q: query,
+                    type: 'video',
+                    maxResults: MAX_RESULTS,
+                    key: YT_API_KEY,
+                    videoEmbeddable: 'true',
+                    safeSearch: 'none'
+                });
+                if (pageToken) params.append('pageToken', pageToken);
+                const res = await fetch(`${YT_SEARCH_URL}?${params}`);
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error?.message || `HTTP ${res.status}`);
+                }
+                const data = await res.json();
+                if (!data.items || data.items.length === 0) {
+                    if (!pageToken) {
+                        ytSearchResults = [];
+                        ytNextPageToken = null;
+                    }
+                    renderYoutubeGrid();
+                    return;
+                }
+                const videoIds = data.items.map(item => item.id.videoId).join(',');
+                const durationMap = await fetchYoutubeDurations(videoIds);
+                const results = data.items.map(item => ({
+                    id: item.id.videoId,
+                    title: item.snippet.title,
+                    channel: item.snippet.channelTitle,
+                    publishedAt: getPublishDate(item.snippet.publishedAt),
+                    thumbnail: item.snippet.thumbnails.high?.url || item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url || '',
+                    duration: durationMap[item.id.videoId] || '',
+                    videoId: item.id.videoId,
+                    category: 'Search Results'
+                }));
+                if (pageToken) {
+                    ytSearchResults = [...ytSearchResults, ...results];
+                } else {
+                    ytSearchResults = results;
+                }
+                ytNextPageToken = data.nextPageToken || null;
+                ytCurrentQuery = query;
+                saveSearchHistory(query);
+                renderYoutubeGrid();
+            } catch (err) {
+                console.error('YouTube search error:', err);
+                showToast('Search failed: ' + err.message, true);
+                if (!pageToken) {
+                    ytSearchResults = [];
+                    renderYoutubeGrid();
+                }
+            } finally {
+                ytIsLoading = false;
+            }
+        }
+
+        // -------- RENDER YT HUB GRID ----------
         function renderYoutubeGrid() {
             channelsGrid.className = 'movies-container';
-            // Build list based on sub-source and category and favorites
+            
+            if (currentSubSource === 'youtube' && ytSearchResults.length > 0) {
+                let filtered = ytSearchResults;
+                
+                if (currentVideoCategory !== 'All' && currentVideoCategory !== 'Search Results') {
+                    const catLower = currentVideoCategory.toLowerCase();
+                    filtered = filtered.filter(v => 
+                        v.title.toLowerCase().includes(catLower) || 
+                        v.channel.toLowerCase().includes(catLower)
+                    );
+                }
+                
+                if (searchQuery.trim() && ytCurrentQuery !== searchQuery.trim()) {
+                    const q = searchQuery.toLowerCase();
+                    filtered = filtered.filter(v => 
+                        v.title.toLowerCase().includes(q) || 
+                        v.channel.toLowerCase().includes(q)
+                    );
+                }
+                
+                if (showVideoFavoritesOnly) {
+                    filtered = filtered.filter(v => isVideoFav(v));
+                }
+                
+                if (filtered.length === 0) {
+                    let msg = 'No results found';
+                    if (currentVideoCategory !== 'All' && currentVideoCategory !== 'Search Results') msg += ` in "${currentVideoCategory}"`;
+                    if (showVideoFavoritesOnly) msg = 'No favorite videos found';
+                    channelsGrid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><div>${msg}</div><div style="font-size:12px; margin-top:8px;">Try a different keyword or category</div></div>`;
+                    totalLabel.innerText = '0';
+                    countType.innerText = 'Results';
+                    return;
+                }
+                
+                let html = `<div class="yt-search-results">`;
+                filtered.forEach(v => {
+                    const thumb = v.thumbnail || 'https://via.placeholder.com/320x180/1a1a2e/fff?text=No+Image';
+                    const duration = v.duration ? formatDuration(v.duration) : '';
+                    const fav = isVideoFav(v);
+                    html += `
+                        <div class="yt-result-card" data-video-id="${v.videoId}" data-title="${v.title}">
+                            <div class="yt-result-thumb">
+                                <img src="${thumb}" alt="${v.title}" loading="lazy" onerror="this.style.display='none'">
+                                ${duration ? `<span class="yt-result-duration">${duration}</span>` : ''}
+                            </div>
+                            <button class="yt-result-fav ${fav?'active':''}" data-video-id="${v.videoId}" data-title="${v.title}" title="Favorite">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <div class="yt-result-info">
+                                <div class="yt-result-title">${v.title}</div>
+                                <div class="yt-result-channel">${v.channel}</div>
+                                <div class="yt-result-meta">
+                                    <span>${v.publishedAt || ''}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                if (ytNextPageToken) {
+                    html += `
+                        <div class="yt-load-more">
+                            <button id="ytLoadMoreBtn"><i class="fas fa-chevron-down"></i> Load More</button>
+                        </div>
+                    `;
+                }
+                channelsGrid.innerHTML = html;
+                
+                channelsGrid.querySelectorAll('.yt-result-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (e.target.closest('.yt-result-fav')) return;
+                        const videoId = card.dataset.videoId;
+                        const title = card.dataset.title;
+                        const videoItem = {
+                            id: videoId,
+                            title: title,
+                            videoId: videoId,
+                            category: 'Search'
+                        };
+                        playYoutubeVideo(videoItem);
+                    });
+                });
+                
+                channelsGrid.querySelectorAll('.yt-result-fav').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const videoId = btn.dataset.videoId;
+                        const video = ytSearchResults.find(v => v.videoId === videoId);
+                        if (video) {
+                            toggleVideoFav(video);
+                            const isFav = isVideoFav(video);
+                            btn.classList.toggle('active', isFav);
+                            showToast(isFav ? '❤️ Added to favorites' : '💔 Removed from favorites');
+                        }
+                    });
+                });
+                
+                const loadMoreBtn = document.getElementById('ytLoadMoreBtn');
+                if (loadMoreBtn) {
+                    loadMoreBtn.addEventListener('click', () => {
+                        if (ytNextPageToken && ytCurrentQuery) {
+                            searchYoutube(ytCurrentQuery, ytNextPageToken);
+                        }
+                    });
+                }
+                totalLabel.innerText = filtered.length;
+                countType.innerText = 'Results';
+                updateLiveBadge();
+                return;
+            }
+
             let sourceVideos = (currentSubSource === 'youtube') ? YOUTUBE_VIDEOS : FACEBOOK_VIDEOS;
             let filtered = sourceVideos;
             if (currentVideoCategory !== 'All') {
@@ -1694,9 +2110,10 @@
             }
             if (filtered.length === 0) {
                 channelsGrid.innerHTML = `<div class="no-results"><i class="fas fa-video-slash"></i><div>No videos found</div><div style="font-size:12px; margin-top:8px;">Try a different keyword</div></div>`;
+                totalLabel.innerText = '0';
+                countType.innerText = 'Videos';
                 return;
             }
-            // Build rows by category (like movies)
             const categories = [...new Set(filtered.map(v => v.category))];
             categories.sort();
             channelsGrid.innerHTML = '';
@@ -1721,7 +2138,6 @@
                     const card = document.createElement('div');
                     card.className = 'video-card';
                     const fav = isVideoFav(v);
-                    // Use video thumbnail
                     const thumb = v.thumbnail || 'https://via.placeholder.com/320x180/1a1a2e/fff?text=No+Image';
                     card.innerHTML = `
                         <img class="video-thumb" src="${thumb}" onerror="this.src='https://via.placeholder.com/320x180/1a1a2e/fff?text=Error'">
@@ -1735,17 +2151,14 @@
                         <div class="fav-btn-top ${fav?'active':''}" data-id="${v.id}"><i class="fas fa-heart"></i></div>
                         <button class="card-delete" data-id="${v.id}" title="Remove video">✕</button>
                     `;
-                    // Favorite toggle
                     card.querySelector('.fav-btn-top').onclick = (e) => {
                         e.stopPropagation();
                         toggleVideoFav(v);
                     };
-                    // Play
                     card.querySelector('.play-video').onclick = (e) => {
                         e.stopPropagation();
                         playYoutubeVideo(v);
                     };
-                    // Delete
                     card.querySelector('.card-delete').onclick = (e) => {
                         e.stopPropagation();
                         const sourceArr = (currentSubSource === 'youtube') ? YOUTUBE_VIDEOS : FACEBOOK_VIDEOS;
@@ -1757,10 +2170,7 @@
                             showToast('🗑️ Video removed');
                         }
                     };
-                    card.onclick = () => {
-                        playYoutubeVideo(v);
-                    };
-                    // Tooltip for action button
+                    card.onclick = () => { playYoutubeVideo(v); };
                     card.querySelector('.play-video').addEventListener('mouseenter', (e) => {
                         const tooltip = e.currentTarget.querySelector('.custom-tooltip');
                         if (tooltip) tooltip.style.display = 'block';
@@ -1775,12 +2185,21 @@
                 row.querySelector('.next').onclick = () => scrollDiv.scrollBy({ left: 300, behavior: 'smooth' });
                 channelsGrid.appendChild(row);
             });
+            totalLabel.innerText = filtered.length;
+            countType.innerText = 'Videos';
+            updateLiveBadge();
         }
 
         // -------- RENDER YT CATEGORY TABS ----------
         function renderYoutubeCategoryTabs() {
             let sourceVideos = (currentSubSource === 'youtube') ? YOUTUBE_VIDEOS : FACEBOOK_VIDEOS;
-            let cats = ["All", ...new Set(sourceVideos.map(v => v.category))];
+            let cats = ["All"];
+            if (currentSubSource === 'youtube' && ytSearchResults.length > 0) {
+                cats.push("Search Results");
+            }
+            const staticCats = [...new Set(sourceVideos.map(v => v.category))];
+            staticCats.forEach(c => { if (!cats.includes(c)) cats.push(c); });
+            
             youtubeCategoryTabs.innerHTML = cats.map(c => `<button class="filter-tab ${c === currentVideoCategory ? 'active' : ''}">${c}</button>`).join('');
             youtubeCategoryTabs.querySelectorAll('.filter-tab').forEach(btn => {
                 btn.onclick = () => {
@@ -1792,30 +2211,31 @@
             });
         }
 
-        // -------- SMART SEARCH: redirect to platform search ----------
         function handleYoutubeSearch(query) {
             if (!query || !query.trim()) return;
-            const encoded = encodeURIComponent(query.trim());
-            let searchUrl = '';
+            const trimmed = query.trim();
             if (currentSubSource === 'youtube') {
-                searchUrl = `https://www.youtube.com/results?search_query=${encoded}`;
+                ytSearchResults = [];
+                ytNextPageToken = null;
+                ytCurrentQuery = trimmed;
+                currentVideoCategory = 'All';
+                renderYoutubeCategoryTabs();
+                searchYoutube(trimmed);
+                return;
             } else if (currentSubSource === 'facebook') {
-                searchUrl = `https://www.facebook.com/search/top?q=${encoded}`;
-            }
-            if (searchUrl) {
-                window.open(searchUrl, '_blank');
-                // Clear the search input after opening
+                const encoded = encodeURIComponent(trimmed);
+                window.open(`https://www.facebook.com/search/top?q=${encoded}`, '_blank');
                 searchInput.value = '';
                 searchQuery = '';
                 searchClear.style.display = 'none';
-                showToast(`🔍 Searching ${currentSubSource}...`);
+                showToast(`🔍 Searching Facebook...`);
+                return;
             }
         }
 
-        // -------- MODIFIED refreshDisplay to handle youtube source ----------
+        // -------- REFRESH DISPLAY ----------
         async function refreshDisplay() {
             if (currentSource === 'youtube') {
-                // For YT HUB, we handle separately
                 renderYoutubeGrid();
                 totalLabel.innerText = (currentSubSource === 'youtube' ? YOUTUBE_VIDEOS.length : FACEBOOK_VIDEOS.length);
                 countType.innerText = 'Videos';
@@ -1826,7 +2246,6 @@
                 return;
             }
 
-            // Original logic for other sources
             let filtered = [...allItems];
             if (showFavoritesOnly && (currentSource === 'local' || currentSource === 'global')) {
                 filtered = filtered.filter(ch => isChannelFav(ch));
@@ -1842,9 +2261,6 @@
                 } else {
                     if(searchQuery.trim()) {
                         let localFiltered = filtered.filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()));
-                        if(searchQuery.trim() && localFiltered.length === 0 && searchQuery.trim().length > 2) {
-                            // external search triggered in input event
-                        }
                         filtered = localFiltered;
                     }
                     if(currentGenre !== 'All') filtered = filtered.filter(m => m.genre === currentGenre);
@@ -1860,7 +2276,7 @@
             else countType.innerText = 'Channels';
 
             if(currentSource === 'movies') renderMovies();
-            else if(currentSource === 'youtube') {} // handled above
+            else if(currentSource === 'youtube') {}
             else renderTVGrid();
             updateLiveBadge();
             updateControlsVisibility();
@@ -1869,7 +2285,7 @@
             movieFavToggle.classList.toggle('active', showFavMovies);
         }
 
-        // -------- MODIFIED setSource to handle youtube source ----------
+        // -------- SET SOURCE ----------
         async function setSource(source) {
             stopAll();
             currentSource = source; autoPlay = true;
@@ -1901,36 +2317,32 @@
                 movieFilters.style.display = 'none';
                 youtubeSubSource.style.display = 'flex';
                 youtubeFilters.style.display = 'block';
-                // Set default sub-source
                 currentSubSource = 'youtube';
                 document.querySelectorAll('.sub-source-btn').forEach(b => b.classList.remove('active'));
                 document.querySelector('.sub-source-btn[data-sub="youtube"]').classList.add('active');
                 currentVideoCategory = 'All';
-                // Render category tabs and grid
+                ytSearchResults = [];
+                ytNextPageToken = null;
+                ytCurrentQuery = '';
                 renderYoutubeCategoryTabs();
                 renderYoutubeGrid();
-                // Show the youtube iframe ready
                 video.style.display = 'none';
                 movieIframe.style.display = 'none';
                 youtubeIframe.style.display = 'block';
-                youtubeIframe.src = ''; // Clear any previous
+                youtubeIframe.src = '';
                 channelInfo.innerHTML = '<i class="fab fa-youtube"></i> YT HUB';
                 if (channelInfoTimer) clearTimeout(channelInfoTimer);
                 channelInfo.style.opacity = '1';
                 channelInfoTimer = setTimeout(() => { channelInfo.style.opacity = '0'; }, 5000);
                 updateLiveBadge();
                 updateControlsVisibility();
-                // Set search placeholder
-                searchInput.placeholder = "🔍 Search videos... (press Enter to search on platform)";
-                // Show count
+                searchInput.placeholder = "🔍 Search YouTube... (press Enter)";
                 totalLabel.innerText = YOUTUBE_VIDEOS.length;
                 countType.innerText = 'Videos';
-                // Hide favorites toggle initially (only for videos)
                 videoFavToggle.classList.remove('active');
                 showVideoFavoritesOnly = false;
                 return;
             }
-            // For non-youtube sources, reset search and other UI
             currentCategory = "All"; searchQuery = ""; searchInput.value = ""; searchClear.style.display = 'none';
             if(source !== 'movies') renderCategoryTabs();
             refreshDisplay();
@@ -1948,16 +2360,22 @@
                 this.classList.add('active');
                 currentSubSource = this.dataset.sub;
                 currentVideoCategory = 'All';
+                if (currentSubSource === 'facebook') {
+                    ytSearchResults = [];
+                    ytNextPageToken = null;
+                    ytCurrentQuery = '';
+                }
                 renderYoutubeCategoryTabs();
                 renderYoutubeGrid();
-                // Update count
                 const total = currentSubSource === 'youtube' ? YOUTUBE_VIDEOS.length : FACEBOOK_VIDEOS.length;
                 totalLabel.innerText = total;
                 countType.innerText = 'Videos';
-                // Update search placeholder
                 searchInput.placeholder = currentSubSource === 'youtube' 
                     ? '🔍 Search YouTube... (press Enter)' 
                     : '🔍 Search Facebook... (press Enter)';
+                searchInput.value = '';
+                searchQuery = '';
+                searchClear.style.display = 'none';
             });
         });
 
@@ -1969,39 +2387,45 @@
             renderYoutubeGrid();
         });
 
-        // -------- SEARCH HANDLING (modified for YT HUB smart search) ----------
+        // -------- SEARCH HANDLING ----------
+        function debouncedYoutubeSearch(query) {
+            if (searchDebounceTimeout) clearTimeout(searchDebounceTimeout);
+            if (!query.trim()) {
+                ytSearchResults = [];
+                ytNextPageToken = null;
+                ytCurrentQuery = '';
+                currentVideoCategory = 'All';
+                renderYoutubeCategoryTabs();
+                renderYoutubeGrid();
+                return;
+            }
+            searchDebounceTimeout = setTimeout(() => {
+                handleYoutubeSearch(query);
+            }, 800);
+        }
+
         searchInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && currentSource === 'youtube') {
                 e.preventDefault();
                 const val = this.value.trim();
                 if (val) {
-                    // First, filter locally; if no results, offer to search on platform
-                    const filtered = (currentSubSource === 'youtube' ? YOUTUBE_VIDEOS : FACEBOOK_VIDEOS)
-                        .filter(v => v.title.toLowerCase().includes(val.toLowerCase()) || v.category.toLowerCase().includes(val.toLowerCase()));
-                    if (filtered.length === 0) {
-                        // No local results, ask user if they want to search on platform
-                        if (confirm(`No local results found. Search "${val}" on ${currentSubSource}?`)) {
-                            handleYoutubeSearch(val);
-                        }
-                    } else {
-                        // Local results exist, just filter
-                        searchQuery = val;
-                        searchClear.style.display = 'flex';
-                        renderYoutubeGrid();
-                    }
+                    if (searchDebounceTimeout) clearTimeout(searchDebounceTimeout);
+                    handleYoutubeSearch(val);
                 }
             }
         });
 
-        // Also handle regular input for filtering (but only for local filtering, not platform search)
         searchInput.oninput = (e) => {
             const val = e.target.value;
             searchQuery = val;
             searchClear.style.display = val ? 'flex' : 'none';
             
             if (currentSource === 'youtube') {
-                // For YT HUB, we filter locally AND also allow Enter to search on platform
-                renderYoutubeGrid();
+                if (currentSubSource === 'youtube') {
+                    debouncedYoutubeSearch(val);
+                } else if (currentSubSource === 'facebook') {
+                    renderYoutubeGrid();
+                }
                 return;
             }
             if(currentSource === 'movies') {
@@ -2042,7 +2466,25 @@
             }
         };
 
-        searchClear.onclick = () => { searchInput.value = ''; searchQuery = ''; searchClear.style.display = 'none'; refreshDisplay(); };
+        searchClear.onclick = () => { 
+            searchInput.value = ''; 
+            searchQuery = ''; 
+            searchClear.style.display = 'none'; 
+            if (currentSource === 'youtube' && currentSubSource === 'youtube') {
+                if (searchDebounceTimeout) clearTimeout(searchDebounceTimeout);
+                ytSearchResults = [];
+                ytNextPageToken = null;
+                ytCurrentQuery = '';
+                currentVideoCategory = 'All';
+                renderYoutubeCategoryTabs();
+                renderYoutubeGrid();
+                totalLabel.innerText = YOUTUBE_VIDEOS.length;
+                countType.innerText = 'Videos';
+                updateLiveBadge();
+            } else {
+                refreshDisplay();
+            }
+        };
 
         // -------- ADD URL MODAL ----------
         searchAddBtn.addEventListener('click', () => {
@@ -2083,16 +2525,98 @@
             }
         });
 
-        // -------- REST OF ORIGINAL FUNCTIONS (unchanged) ----------
-        // playChannel, renderTVGrid, renderMovies, etc.
-        // We need to keep them as is. However, playChannel is used for movies and TV, not for youtube.
-        // But we have our own playYoutubeVideo for youtube.
+        // -------- FLOATING TRAILER FOR MOVIES (FIXED - Hover on poster & click to play) ----------
+        let trailerHoverTimer = null;
+        let activeTrailerMovie = null;
+        let trailerCardRef = null;
 
-        // The original playChannel function remains unchanged, but we won't call it for youtube.
-        // We need to ensure that when source is youtube, playChannel is not called.
-        // In the refreshDisplay, we already have a guard for youtube.
+        function getTrailerEmbedUrl(movie) {
+            // Use YouTube search for "movie name official trailer"
+            const searchQuery = encodeURIComponent(movie.name + ' official trailer');
+            // Use embed with search - this shows a playlist that auto-plays the first result
+            return `https://www.youtube.com/embed/?listType=search&list=${searchQuery}&autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&fs=0&mute=1`;
+        }
 
-        // The original playChannel function:
+        function getTrailerEmbedUrlFull(movie) {
+            const searchQuery = encodeURIComponent(movie.name + ' official trailer');
+            return `https://www.youtube.com/embed/?listType=search&list=${searchQuery}&autoplay=1&controls=1&modestbranding=1&rel=0&iv_load_policy=3&enablejsapi=1`;
+        }
+
+        function showFloatingTrailer(movie, event, card) {
+            if (trailerHoverTimer) clearTimeout(trailerHoverTimer);
+            trailerHoverTimer = setTimeout(() => {
+                const rect = card.getBoundingClientRect();
+                const trailerWidth = Math.min(320, window.innerWidth - 40);
+                const trailerHeight = trailerWidth * 0.5625;
+                
+                let left = rect.left + (rect.width / 2) - (trailerWidth / 2);
+                let top = rect.top - trailerHeight - 10;
+                if (top < 10) {
+                    top = rect.bottom + 10;
+                }
+                if (left < 10) left = 10;
+                if (left + trailerWidth > window.innerWidth - 10) {
+                    left = window.innerWidth - trailerWidth - 10;
+                }
+                
+                floatingTrailer.style.left = left + 'px';
+                floatingTrailer.style.top = top + 'px';
+                floatingTrailer.style.width = trailerWidth + 'px';
+                floatingTrailer.style.height = trailerHeight + 'px';
+                
+                const trailerSrc = getTrailerEmbedUrl(movie);
+                floatingTrailerIframe.src = trailerSrc;
+                floatingTrailer.classList.add('active');
+                trailerCardRef = card;
+                activeTrailerMovie = movie;
+            }, 1800);
+        }
+
+        function hideFloatingTrailer() {
+            if (trailerHoverTimer) {
+                clearTimeout(trailerHoverTimer);
+                trailerHoverTimer = null;
+            }
+            floatingTrailer.classList.remove('active');
+            setTimeout(() => {
+                floatingTrailerIframe.src = '';
+            }, 150);
+            activeTrailerMovie = null;
+            trailerCardRef = null;
+        }
+
+        // Function to play trailer in the main player (when clicking the trailer button)
+        function playTrailerInMainPlayer(movie) {
+            stopAll();
+            // Use youtubeIframe to play the trailer
+            youtubeIframe.style.display = 'block';
+            video.style.display = 'none';
+            movieIframe.style.display = 'none';
+            
+            const trailerSrc = getTrailerEmbedUrlFull(movie);
+            youtubeIframe.src = trailerSrc;
+            
+            // Set proper attributes
+            youtubeIframe.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+            youtubeIframe.setAttribute('allowfullscreen', 'true');
+            youtubeIframe.style.width = '100%';
+            youtubeIframe.style.height = '100%';
+            
+            // Update channel info
+            channelInfo.innerHTML = `<i class="fab fa-youtube"></i> Trailer: ${movie.name}`;
+            if (channelInfoTimer) clearTimeout(channelInfoTimer);
+            channelInfo.style.opacity = '1';
+            channelInfoTimer = setTimeout(() => { channelInfo.style.opacity = '0'; }, 6000);
+            
+            wrapper.style.aspectRatio = '16 / 9';
+            wrapper.style.height = 'auto';
+            
+            loadingOverlay.classList.remove('active');
+            updateControlsVisibility();
+            showToast(`▶️ Playing trailer: ${movie.name}`);
+        }
+
+        // -------- PLAY CHANNEL ----------
         async function playChannel(index, isRetry = false) {
             if(!displayItems.length) return;
             const item = displayItems[index];
@@ -2141,7 +2665,6 @@
                     updateControlsVisibility();
                 }
             } else if(currentSource === 'youtube') {
-                // Should not happen because we use separate function
                 showToast('Select a video from YouTube panel');
                 loadingOverlay.classList.remove('active');
                 channelInfoTimer = setTimeout(() => { channelInfo.style.opacity = '0'; }, 5000);
@@ -2214,7 +2737,6 @@
             updateErrorButtons();
         }
 
-        // Keep the original navigation functions
         function playNext() { if(displayItems.length && currentSource !== 'youtube') { lastDirection = 1; playChannel((currentIdx+1)%displayItems.length, false); } }
         function playPrev() { if(displayItems.length && currentSource !== 'youtube') { lastDirection = -1; playChannel((currentIdx-1+displayItems.length)%displayItems.length, false); } }
         prevBtn.onclick = playPrev; nextBtn.onclick = playNext;
@@ -2255,7 +2777,7 @@
         
         function updateControlsVisibility() { 
             const controls = document.getElementById('videoControls');
-            if (currentSource === 'youtube') {
+            if (currentSource === 'youtube' || (currentSource === 'movies' && youtubeIframe.style.display === 'block' && youtubeIframe.src !== '')) {
                 controls.style.display = 'none';
             } 
             else if (currentSource === 'movies' && movieIframe.style.display === 'block') {
@@ -2308,7 +2830,7 @@
             autoPlay = false;
         }
 
-        // ---------- HERO CAROUSEL (only for movies) ----------
+        // ---------- HERO CAROUSEL ----------
         let heroSlides = [];
         let currentSlide = 0;
         let autoSlideInterval = null;
@@ -2370,22 +2892,7 @@
             dots[currentSlide]?.classList.add('active');
         }
 
-        // Trailer hover (for movies)
-        let trailerHoverTimer = null;
-        function handleTrailerHover(movie, btn) {
-            if (trailerHoverTimer) clearTimeout(trailerHoverTimer);
-            trailerHoverTimer = setTimeout(() => {
-                let trailerSrc = movie.trailerUrl || `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(movie.name+' official trailer')}&autoplay=1`;
-                trailerIframe.src = trailerSrc;
-                trailerModal.classList.add('active');
-            }, 3000);
-        }
-        function handleTrailerLeave() {
-            if (trailerHoverTimer) clearTimeout(trailerHoverTimer);
-            trailerModal.classList.remove('active');
-            trailerIframe.src = '';
-        }
-
+        // -------- MOVIE RENDER (with floating trailer on poster hover & click to play) ----------
         let trendAutoScrollInterval = null;
         let trendScrollDivRef = null;
         function startTrendAutoScroll(scrollDiv) {
@@ -2456,7 +2963,6 @@
             if (currentGenre === 'Trend') {
                 allMovies = trendingMovies.length ? trendingMovies : movieMaster.slice(0, 5);
             }
-            // filter by personal favorites if enabled
             if (showFavMovies) {
                 allMovies = allMovies.filter(m => isMovieFav(m));
             }
@@ -2485,7 +2991,7 @@
                     const likeCount = likes.get(m.imdbId) || 0;
                     const isLiked = userLiked.get(m.imdbId) || false;
                     card.innerHTML = `<img class="movie-poster" src="${m.logo}" onerror="this.src='https://via.placeholder.com/300x450'"><div class="rating-badge"><i class="fas fa-star"></i> ${m.rating}<span class="imdb-text">IMDb</span></div><div class="poster-actions"><div class="action-btn play-movie" data-tooltip="Play"><i class="fas fa-play"></i><span class="custom-tooltip">Play</span></div><div class="action-btn copy-imdb" data-tooltip="IMDb"><i class="fab fa-imdb"></i><span class="custom-tooltip">IMDb</span></div><div class="action-btn trailer-btn" data-tooltip="Trailer"><i class="fab fa-youtube"></i><span class="custom-tooltip">Trailer</span></div><div class="action-btn provider-switch" data-tooltip="Server"><i class="fas fa-exchange-alt"></i><span class="custom-tooltip">Server</span></div></div><div class="movie-info"><div class="movie-title">${m.name}</div><div class="movie-year">${m.year}</div></div>`;
-                    // Global rating (like) button
+                    
                     const favTop = document.createElement('div');
                     favTop.className = `fav-btn-top ${isLiked ? 'active' : ''}`;
                     favTop.title = 'Rate this movie';
@@ -2493,29 +2999,39 @@
                     favTop.onclick = (e) => { e.stopPropagation(); toggleLike(m); };
                     card.appendChild(favTop);
                     
-                    // Personal favorite via double-click on the poster (no visible button)
                     card.addEventListener('dblclick', (e) => {
                         e.stopPropagation();
                         toggleMovieFav(m);
                         showToast(isMovieFav(m) ? 'Added to favorites' : 'Removed from favorites');
                     });
                     
-                    // Action buttons
                     card.querySelector('.play-movie').onclick = (e) => { e.stopPropagation(); currentMovieItem = m; playChannel(displayItems.indexOf(m), false); };
                     card.querySelector('.copy-imdb').onclick = (e) => { e.stopPropagation(); window.open(`https://www.imdb.com/title/${m.imdbId}/`, '_blank'); showToast('Opening IMDb'); };
-                    // Trailer button: hover 3s to show trailer, leave to close
+                    
+                    // Trailer button: click to play in main player
                     const trailerBtn = card.querySelector('.trailer-btn');
-                    trailerBtn.addEventListener('mouseenter', (e) => {
+                    trailerBtn.onclick = (e) => {
                         e.stopPropagation();
-                        handleTrailerHover(m, trailerBtn);
-                    });
-                    trailerBtn.addEventListener('mouseleave', (e) => {
-                        e.stopPropagation();
-                        handleTrailerLeave();
-                    });
-                    trailerBtn.addEventListener('click', (e) => e.stopPropagation());
+                        if (m) {
+                            playTrailerInMainPlayer(m);
+                        }
+                    };
+                    
                     card.querySelector('.provider-switch').onclick = (e) => { e.stopPropagation(); showProviderSelector(m, () => playChannel(displayItems.indexOf(m), true)); };
+                    
+                    // CARD HOVER: show floating trailer on poster hover
+                    card.addEventListener('mouseenter', (e) => {
+                        // Only if not currently playing in main player
+                        if (youtubeIframe.style.display !== 'block' || !youtubeIframe.src) {
+                            showFloatingTrailer(m, e, card);
+                        }
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        hideFloatingTrailer();
+                    });
+                    
                     card.onclick = () => { currentMovieItem = m; playChannel(displayItems.indexOf(m), false); };
+                    
                     card.querySelectorAll('.action-btn').forEach(btn => {
                         const tooltip = btn.querySelector('.custom-tooltip');
                         btn.addEventListener('mouseenter', () => { if(tooltip) tooltip.style.display = 'block'; });
@@ -2559,8 +3075,6 @@
         trailerModal.onclick = (e) => { if(e.target === trailerModal) { trailerModal.classList.remove('active'); trailerIframe.src = ''; } };
 
         const CATEGORY_ORDER = ["All", "Sports", "Series", "Cooking", "Movies", "News", "Entertainment"];
-
-        // -------- OVERRIDE refreshDisplay for youtube (already done above) --------
 
         function renderCategoryTabs() {
             if(currentSource === 'movies') return;
@@ -2702,6 +3216,11 @@
         wrapper.addEventListener('mouseleave', () => {
             document.getElementById('videoControls').style.opacity = '0';
             navArrows.forEach(arrow => arrow.style.opacity = '0');
+        });
+
+        // Hide floating trailer when mouse leaves the grid
+        channelsGrid.addEventListener('mouseleave', () => {
+            hideFloatingTrailer();
         });
 
         const logoIcon = document.querySelector('.logo-icon');
